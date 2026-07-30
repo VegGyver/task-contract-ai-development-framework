@@ -14,6 +14,8 @@ Use this document as the canonical tool-agnostic project rules source. Tool adap
 
 - Work through small, reviewable tasks.
 - Read and modify only task-relevant, explicitly authorized files.
+- Re-read current relevant files before continuing after a pause or developer edit.
+- Preserve compatible manual or concurrent changes; never restore uncertain work automatically.
 - Preserve working code and existing behavior.
 - Reuse existing functions, validations, guards, utilities, and local patterns.
 - Add or minimally adjust only what the approved task requires.
@@ -23,6 +25,8 @@ Use this document as the canonical tool-agnostic project rules source. Tool adap
 - Report and stop on conflicts involving official security, compatibility, or correctness requirements.
 - Use only verified existing project capabilities; planned or documented capabilities are not available without repository evidence.
 - Suggest or run only the smallest one to three relevant checks allowed by the task. In the default `DEVELOPER_RUN` mode, provide exact commands, wait for developer-reported results, and never execute, infer or invent results. Describe commands by effective scope; use `targeted` only when the existing script and runner semantics establish selectivity.
+- Record scope-neutral clarifications. Stop for an approved Task Contract amendment when behavior, acceptance criteria, edit surface, dependency, interface, risk or an exclusion changes.
+- Begin operational responses with outcome, completed action and next developer step. Add detail only for decisions, deviations, failures or ambiguity.
 
 ## Restrictions
 

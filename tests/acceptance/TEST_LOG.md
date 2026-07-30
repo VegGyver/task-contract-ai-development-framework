@@ -106,3 +106,18 @@ Accepted follow-up for v0.3.2:
 - make `DEVELOPER_RUN` command ownership and result provenance explicit;
 - require command descriptions to match effective scope;
 - mark native Codex invocation verified in the adapter registry.
+
+## v0.3.3 — Task evolution and outcome-first workflow
+
+Scope:
+
+- complete or partial greenfield input with a declared task source;
+- backlog, issue, analysis and direct-request convergence;
+- clarification, correction, local adaptation, amendment, separate-task and blocker handling;
+- preservation of developer and concurrent changes;
+- outcome-first operational responses and final verification labels.
+
+Automated runtime suite: **26/26 passed** on 2026-07-30.
+Framework preflight: **passed with 0 errors and 0 warnings**.
+
+Clean model acceptance remains required for bootstrap, task generation, in-task amendment handling and final outcome reporting.

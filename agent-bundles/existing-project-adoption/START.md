@@ -19,6 +19,6 @@ Return `OUTPUT-SCHEMA.md`. Propose only the standard missing core method documen
 Stop with:
 
 ```txt
-No files changed.
-Waiting for developer review.
+READY FOR REVIEW — Inspection completed without project changes.
+Next action: review the findings and approve or correct the candidate file set.
 ```

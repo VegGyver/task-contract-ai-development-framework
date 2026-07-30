@@ -25,6 +25,8 @@ docs/
 
 For greenfield projects, use these paths unless the team explicitly chooses another convention or an approved external system is the sole operational source for a role.
 
+The Backlog role declares the operational source of tasks; it does not require a complete repository backlog. It may map to an approved external tracker or `external:Developer requests` when tasks are supplied directly. Do not create `docs/backlog.md` beside an external mapping.
+
 For existing projects, canonical roles are required but existing paths may be mapped and preserved. Do not create alias or pointer files only to match a canonical filename.
 
 Store approved role-to-path mappings in `docs/method/project-manifest.md`. Create this manifest when any canonical path deviation exists.
@@ -57,6 +59,18 @@ Do not create a parallel status source when an existing repository backlog or ex
 - do not invent project decisions
 - preserve every supplied open decision in each applicable canonical section exactly once
 - use an explicit `None` marker when no open decisions exist
+
+## State and decision discipline
+
+Bootstrap documentation must keep these categories visibly distinct:
+
+- verified current state;
+- desired or planned state;
+- confirmed project decisions;
+- agent proposals awaiting approval;
+- open decisions.
+
+Planned functionality is not an available capability. Agent proposals never become project decisions until approved. A generated backlog is a planning proposal until developer review.
 
 ## Existing-project adoption
 

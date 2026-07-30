@@ -1,5 +1,7 @@
 # Architecture Overview
 
+For each applicable section, distinguish verified current structure, confirmed planned decisions, proposals awaiting approval and open decisions.
+
 ## Applications / packages
 
 ## Main technologies

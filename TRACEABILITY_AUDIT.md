@@ -1,4 +1,4 @@
-# Traceability Audit — v0.3.0
+# Traceability Audit — v0.3.3
 
 This audit maps the framework decisions to their authoritative modules and runtime coverage.
 
@@ -14,6 +14,7 @@ Status meanings:
 | Explicit task boundary and allowed edit surface | `core/task-contract.md` | all task-contract templates | Covered |
 | Unlisted files/change types are forbidden | `core/principles.md` | global/project rules and templates | Covered |
 | Minimum-first prompts and selective loading | `core/principles.md`, `core/module-loading-guide.md` | runtime files remain compact | Covered |
+| Outcome-first operational responses | principles, lifecycle, review guide | bundle schemas and compact runtime rules | Covered |
 | One installed runtime outside target projects | run protocol, installation/versioning guide | installer, launcher and procedures | Covered |
 | One stable operation protocol for every agent | run protocol | runner public commands and registry | Covered |
 | Deterministic agent and module resolution | agent registry and machine manifests | loader and validator | Covered |
@@ -24,6 +25,7 @@ Status meanings:
 | Inspect only relevant context; no whole-repo scan by default | principles, capability guide | global/standalone rules | Covered |
 | Existing capabilities only; no implicit dependencies/tooling/tests | capability guide | global/project/standalone rules | Covered |
 | Preservation-first for working code | principles, decomposition guide | global/project/standalone and code-change templates | Covered |
+| Developer and concurrent changes are re-read and preserved | principles, change/history guide | global/project/standalone rules | Covered |
 | Reuse existing functions, guards and validations; no duplicate controls | principles | global/project rules and code-change template | Covered |
 | Local pattern first; official version-compatible docs when absent | implementation source hierarchy | compact runtime and project-rules template | Covered |
 | Official safety/compatibility/correctness conflict is reported | implementation source hierarchy | compact runtime rules | Covered |
@@ -39,6 +41,7 @@ Status meanings:
 | Human review, UI/console verification and acceptance are mandatory | lifecycle, review guide | response expectations | Covered |
 | Agent does not commit, push or discard without permission | review guide | adapter/agent boundaries | Covered |
 | Exact operational states: implemented is not accepted/completed | lifecycle | review response state | Covered |
+| Clarifications, corrections, amendments and separate requests are explicit | task contract, change/history guide | task agent schema and compact runtime rules | Covered |
 | Completed task history is immutable | change/history guide | project rules and adoption agent | Covered |
 | Later changes/fixes/extensions are appended and linked | change/history guide | change templates | Covered |
 | Task naming belongs to project/team/tracker | change/history guide | naming template and agents | Covered |
@@ -51,6 +54,7 @@ Status meanings:
 | Multi-agent work requires explicit ownership and integration gate | team/multi-agent guide | loaded only for team scenarios | Added in v0.2.1 |
 | Database migration/backfill, security, performance and hotfix need dedicated bounded workflows | advanced-scenarios guide | loaded only for those task types | Added in v0.2.1 |
 | Project bootstrap can generate a minimal project documentation set | project-doc templates | bootstrap agent | Added in v0.2.1 |
+| Greenfield bootstrap supports partial input and optional repository backlog | project documentation schema, start procedure | bootstrap agent and output schema | Covered |
 | Completed implementation notes and original dependencies are historical too | change/history guide | adoption policy | Added in v0.2.1 |
 
 ## Runtime-size conclusion
@@ -64,7 +68,7 @@ No new rule was added to the ordinary global runtime unless it is needed for alm
 
 ## Audit result
 
-All principles explicitly established through v0.3.0 are now either:
+All principles explicitly established through v0.3.3 are now either:
 
 - present in ordinary runtime because they apply to nearly every task; or
 - retained in a single authoritative optional module and loaded only for the applicable scenario.

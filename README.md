@@ -2,7 +2,7 @@
 
 A lightweight, model-agnostic framework for bounded, reviewable and incremental AI-assisted software development.
 
-Version: **v0.3.2 architecture-A draft**
+Version: **v0.3.3 architecture-A draft**
 
 ## Core formula
 
@@ -10,6 +10,7 @@ Version: **v0.3.2 architecture-A draft**
 Repo-first
 Task-contract driven
 Minimum-first
+Outcome-first
 Standardized
 Model-agnostic
 Tool-resilient
@@ -48,6 +49,8 @@ operation
 ```
 
 Users select an operation or public agent ID, not framework files. The same protocol applies to greenfield targets without a repository, existing projects, daily tasks and future agents.
+
+A greenfield bootstrap may start from a complete analysis, a product idea, an initialized target, an initial roadmap or one first task. A repository backlog is optional when the manifest declares another task source, including direct developer requests.
 
 The envelope declares its adapter transport. Native Codex invocation is verified. Cline currently uses the verified `manual-envelope` procedure in `adapters/cline.md`; native runner-to-Cline invocation remains unverified.
 

@@ -1,5 +1,14 @@
 # Output Schema — Existing Project Adoption
 
+Begin with:
+
+```txt
+READY FOR REVIEW — Inspection completed without project changes.
+Next action: review the findings and approve or correct the candidate file set.
+```
+
+Use `BLOCKED — <reason>` instead when safe inspection cannot continue.
+
 0. Scope confirmation
    - target project root
    - instruction files loaded
@@ -28,3 +37,4 @@ For every proposed file state:
 List target-project files inspected separately from instruction files loaded.
 For every observed standard, include classification, representative evidence paths and scope/limits.
 Do not generate files during inspect-only mode.
+Keep successful sections concise. Add explanation only for missing, conflicting or unclear evidence and decisions.

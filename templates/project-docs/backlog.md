@@ -2,6 +2,8 @@
 
 Use the approved project task naming convention.
 
+A generated backlog is a proposal until developer review. It may coexist with later direct requests; both use the same Task Contract flow.
+
 For each item:
 
 ```txt

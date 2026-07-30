@@ -116,6 +116,21 @@ class RuntimeTests(unittest.TestCase):
             result = validate_target(FRAMEWORK_ROOT, target)
         self.assertTrue(result["valid"], result["issues"])
 
+    def test_project_schema_accepts_direct_developer_requests(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._external_backlog_project(target)
+            manifest = target / "docs" / "method" / "project-manifest.md"
+            manifest.write_text(
+                manifest.read_text(encoding="utf-8").replace(
+                    "external:GitHub Issues",
+                    "external:Developer requests",
+                ),
+                encoding="utf-8",
+            )
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertTrue(result["valid"], result["issues"])
+
     def test_project_schema_rejects_parallel_external_backlog(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)
@@ -226,6 +241,11 @@ class RuntimeTests(unittest.TestCase):
             )
         self.assertEqual(envelope["target"]["kind"], "planned-directory")
         self.assertEqual(envelope["agent_id"], "project-bootstrap")
+        instructions = "\n".join(
+            module["content"] for module in envelope["instruction_modules"]
+        )
+        self.assertIn("complete or partial analysis", instructions)
+        self.assertIn("external:Developer requests", instructions)
 
     def test_host_resource_uses_same_target_contract(self) -> None:
         envelope = assemble_run(
@@ -298,6 +318,9 @@ class RuntimeTests(unittest.TestCase):
             "existing script and runner semantics establish selectivity",
             instructions,
         )
+        self.assertIn("Task Contract amendment", instructions)
+        self.assertIn("Preserve compatible manual or concurrent changes", instructions)
+        self.assertIn("Begin operational responses with outcome", instructions)
 
     def test_cline_adoption_envelope_includes_safe_inspection_rules(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -471,9 +494,9 @@ class RuntimeTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(version.returncode, 0, version.stderr)
-            self.assertEqual(version.stdout.strip(), "0.3.2")
+            self.assertEqual(version.stdout.strip(), "0.3.3")
             active = json.loads((home / "active.json").read_text(encoding="utf-8"))
-            self.assertEqual(active["version"], "0.3.2")
+            self.assertEqual(active["version"], "0.3.3")
 
 
 if __name__ == "__main__":

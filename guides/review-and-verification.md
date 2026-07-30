@@ -17,6 +17,8 @@ Describe each command by its effective scope. Use `targeted` only when the exist
 After editing, report:
 
 ```txt
+<OUTCOME> — <one-sentence result>
+Next action:
 Changed files:
 Summary:
 Checks run or to run:
@@ -24,6 +26,18 @@ Manual verification:
 Out of scope:
 State: IMPLEMENTED / VERIFICATION_PENDING / VERIFIED
 ```
+
+Keep a normal success response brief. Add evidence, alternatives or explanation only for a failed check, blocker, deviation, ambiguity or requested decision.
+
+## Outcome labels
+
+- `PASS` — the contracted result is present and every required check already run has passed. This does not imply developer acceptance or commit.
+- `READY FOR CHECK` — implementation is present and a declared developer or manual verification remains.
+- `PARTIAL` — the contract is not fully satisfied; identify completed and remaining work.
+- `BLOCKED` — state the invalid assumption or required decision and do not broaden the task.
+- `FAIL` — identify the failed required check and preserve the bounded state for review.
+
+Never report `PASS` when a mandatory check is still pending.
 
 The developer reviews:
 

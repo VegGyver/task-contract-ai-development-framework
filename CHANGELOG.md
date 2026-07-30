@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.3.3 — Task evolution and outcome-first workflow
+
+- Allowed greenfield bootstrap from complete or partial input without requiring a complete repository backlog.
+- Required current state, desired state, confirmed decisions, proposals and open decisions to remain distinguishable.
+- Converged backlog items, external issues, analysis items and direct developer requests into the same Task Contract flow.
+- Added explicit handling for clarifications, corrections, local adaptations, contract amendments, separate tasks and blockers.
+- Required agents to re-read current files, preserve developer changes and avoid automatic restore or repeated implementation.
+- Standardized outcome-first operational responses and final verification states with details only when needed.
+
 ## v0.3.2 — DEVELOPER_RUN scope and native Codex verification
 
 - Required `DEVELOPER_RUN` agents to provide exact commands, wait for developer-reported results and never execute, infer or invent results.

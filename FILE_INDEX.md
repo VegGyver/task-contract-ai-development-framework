@@ -37,4 +37,6 @@ Each canonical bundle has a machine-authoritative `manifest.json`. `MANIFEST.md`
 - `examples/`: compact examples
 - `tests/acceptance/`: repeatable framework acceptance tests
 
+Active-task amendments and developer/concurrent edits are defined in `core/task-contract.md` and `guides/change-management-and-history.md`. Outcome labels and concise response order are defined in `core/task-lifecycle.md` and `guides/review-and-verification.md`.
+
 Legacy single-file agent profiles remain under `agents/` as unregistered references; the runner uses only registered canonical bundles.
