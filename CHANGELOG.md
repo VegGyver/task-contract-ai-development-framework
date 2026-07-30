@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1 — DEVELOPER_RUN prerequisite ordering correction
+
+- Required `DEVELOPER_RUN` checks to list necessary prerequisites before dependent checks and count them within the one-to-three-check limit.
+
 ## v0.3.0 — Architecture A universal runtime
 
 - Started exclusively from the valid v0.2.7 calibrated core; v0.2.8 remains discarded.

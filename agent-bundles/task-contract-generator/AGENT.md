@@ -27,7 +27,7 @@ Do not load the full framework.
 5. Preserve existing code and capabilities.
 6. Use verified local standards first; where absent, require official version-compatible guidance.
 7. Select the check mode; default to `DEVELOPER_RUN`.
-8. Include only one to three relevant checks.
+8. List one to three relevant checks in executable order. Include only necessary prerequisites, before the checks that depend on them; prerequisites count toward the one-to-three-check limit.
 9. Stop if goal, expected behavior or edit surface cannot be determined safely.
 
 ## Generation policy

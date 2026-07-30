@@ -2,7 +2,7 @@
 
 A lightweight, model-agnostic framework for bounded, reviewable and incremental AI-assisted software development.
 
-Version: **v0.3.0 architecture-A draft**
+Version: **v0.3.1 architecture-A draft**
 
 ## Core formula
 

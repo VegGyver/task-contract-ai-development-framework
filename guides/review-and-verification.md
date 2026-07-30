@@ -11,6 +11,7 @@ Human review is mandatory. Agent self-checks are evidence, not acceptance.
 - `MIXED` — combine only what is necessary.
 
 Suggest the smallest relevant set, normally one to three checks.
+List checks in executable order. Include only necessary prerequisites, before the checks that depend on them; prerequisites count toward the one-to-three-check limit.
 
 After editing, report:
 
