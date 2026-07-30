@@ -14,7 +14,7 @@
       "direct_target_access": true,
       "direct_edit_access": true,
       "transport": "native",
-      "native_invocation_verified": false
+      "native_invocation_verified": true
     },
     "cline": {
       "instructions": "adapters/cline.md",

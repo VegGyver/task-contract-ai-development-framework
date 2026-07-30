@@ -12,6 +12,6 @@ Modify:
 Allowed: minimal fix to identified cause
 Forbidden: speculative fixes, refactor, unrelated cleanup
 Check mode: DEVELOPER_RUN
-Checks: targeted regression check
+Checks: relevant regression check described by effective scope; use targeted only when script and runner semantics establish selectivity
 Stop: after minimal fix and verification instructions
 ```

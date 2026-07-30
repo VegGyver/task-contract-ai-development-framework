@@ -22,6 +22,8 @@ Run the installed release against:
 - no project receives framework runtime files;
 - no scenario requires multi-root, aliases, temporary bundles or reconstructed prompts;
 - missing modules, invalid selectors, target overlap and registry mismatches fail before execution;
+- `DEVELOPER_RUN` outputs exact commands, waits for developer-reported results and never executes, infers or invents results;
+- command descriptions match effective scope, and `targeted` is used only when the existing script and runner semantics establish selectivity;
 - every output stops at the declared developer review gate.
 
 For Cline, run the registered `manual-envelope` transport: copy the generated envelope unchanged, append one declared step marker, allow at most one write confirmation, and start a new task after developer review. A `Pending` UI state must not trigger a repeated write.

@@ -16,4 +16,4 @@ When no local pattern exists, follow official documentation compatible with the 
 
 If unclear, stop and ask.
 
-After editing, report changed files and the smallest one to three relevant checks for developer review. Default to `DEVELOPER_RUN`.
+After editing, report changed files and the smallest one to three relevant checks for developer review. In the default `DEVELOPER_RUN` mode, provide exact commands, wait for developer-reported results, and never execute, infer or invent results. Describe commands by effective scope; use `targeted` only when the existing script and runner semantics establish selectivity.

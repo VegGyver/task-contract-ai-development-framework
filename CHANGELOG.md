@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.2 — DEVELOPER_RUN scope and native Codex verification
+
+- Required `DEVELOPER_RUN` agents to provide exact commands, wait for developer-reported results and never execute, infer or invent results.
+- Required command descriptions to match effective scope and reserved `targeted` for selectivity established by existing script and runner semantics.
+- Recorded the accepted B-016 native Codex workflow and marked native Codex invocation verified.
+
 ## v0.3.1 — DEVELOPER_RUN prerequisite ordering correction
 
 - Required `DEVELOPER_RUN` checks to list necessary prerequisites before dependent checks and count them within the one-to-three-check limit.

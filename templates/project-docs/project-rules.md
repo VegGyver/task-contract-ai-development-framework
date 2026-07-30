@@ -22,7 +22,7 @@ Use this document as the canonical tool-agnostic project rules source. Tool adap
 - Use established ecosystem practice only when official guidance is insufficient.
 - Report and stop on conflicts involving official security, compatibility, or correctness requirements.
 - Use only verified existing project capabilities; planned or documented capabilities are not available without repository evidence.
-- Suggest or run only the smallest one to three relevant checks allowed by the task; default to `DEVELOPER_RUN` and keep developer verification required.
+- Suggest or run only the smallest one to three relevant checks allowed by the task. In the default `DEVELOPER_RUN` mode, provide exact commands, wait for developer-reported results, and never execute, infer or invent results. Describe commands by effective scope; use `targeted` only when the existing script and runner semantics establish selectivity.
 
 ## Restrictions
 

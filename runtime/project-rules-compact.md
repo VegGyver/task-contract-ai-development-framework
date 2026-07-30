@@ -18,6 +18,6 @@ If no local pattern answers the task, use official version-compatible documentat
 
 The task contract defines permission. The selected profile defines order.
 
-Default check mode: `DEVELOPER_RUN`.
+Default check mode: `DEVELOPER_RUN`. Provide exact commands, wait for developer-reported results, and never execute, infer or invent results. Describe commands by effective scope; use `targeted` only when the existing script and runner semantics establish selectivity.
 
 Stop after the approved step and report the diff scope and one to three concise checks.

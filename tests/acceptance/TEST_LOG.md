@@ -89,3 +89,20 @@ Resolution: require read-only existence checks before reads, task-relevant dot-c
 Automated runtime suite after correction: **23/23 passed**. Framework preflight: **0 errors, 0 warnings**.
 
 Retest requirement: rerun adoption from a clean kit extraction. Pass only if the first `INSPECT` task completes without corrective prompts or failed-read recovery and satisfies `existing-project-adoption.md`.
+
+## v0.3.1 — Native Codex daily-task acceptance
+
+Result: passed with verification-guidance findings.
+
+Authoritative evidence:
+
+- TCAF 0.3.1 was invoked through the active native Codex adapter for Software Delivery Planner task B-016.
+- The workflow completed contract preparation, developer review, implementation, `DEVELOPER_RUN` verification, code review, correction, documentation/status reconciliation and local checkpoint commit.
+- Software Delivery Planner checkpoint `72706ed` records the accepted implementation.
+- Developer-reported verification was Feature tests 5/5 and API suite 11/11.
+
+Accepted follow-up for v0.3.2:
+
+- make `DEVELOPER_RUN` command ownership and result provenance explicit;
+- require command descriptions to match effective scope;
+- mark native Codex invocation verified in the adapter registry.

@@ -10,6 +10,6 @@ Modify:
 Allowed: minimal integration using existing logic and patterns
 Forbidden: refactor, optimization, duplicated validation, dependencies, unrelated edits
 Check mode: DEVELOPER_RUN
-Checks: 1–3 targeted checks
+Checks: 1–3 relevant checks described by effective scope; use targeted only when script and runner semantics establish selectivity
 Stop: after code change and verification instructions
 ```

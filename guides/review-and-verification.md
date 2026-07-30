@@ -4,7 +4,7 @@ Human review is mandatory. Agent self-checks are evidence, not acceptance.
 
 ## Check modes
 
-- `DEVELOPER_RUN` — agent lists concise commands; developer runs them. Default.
+- `DEVELOPER_RUN` — agent provides exact commands, does not execute them, waits for developer-reported results, and never infers or invents results. Default.
 - `AGENT_RUN` — agent runs explicitly approved non-destructive checks.
 - `CI` — pipeline provides verification.
 - `MANUAL` — developer follows UI/behavior checks.
@@ -12,6 +12,7 @@ Human review is mandatory. Agent self-checks are evidence, not acceptance.
 
 Suggest the smallest relevant set, normally one to three checks.
 List checks in executable order. Include only necessary prerequisites, before the checks that depend on them; prerequisites count toward the one-to-three-check limit.
+Describe each command by its effective scope. Use `targeted` only when the existing script and runner semantics establish selectivity.
 
 After editing, report:
 

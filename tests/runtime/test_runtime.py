@@ -261,6 +261,44 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(envelope["adapter"]["transport"], "manual-envelope")
         self.assertFalse(envelope["adapter"]["native_invocation_verified"])
 
+    def test_codex_envelope_declares_verified_native_transport(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "task",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Inspect one behavior.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="codex",
+            )
+        self.assertEqual(envelope["adapter"]["transport"], "native")
+        self.assertTrue(envelope["adapter"]["native_invocation_verified"])
+
+    def test_task_envelope_includes_developer_run_scope_rules(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "task",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Change one behavior.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="codex",
+            )
+        instructions = "\n".join(
+            module["content"] for module in envelope["instruction_modules"]
+        )
+        self.assertIn("wait for developer-reported results", instructions)
+        self.assertIn("never execute, infer or invent results", instructions)
+        self.assertIn("Describe each command by its effective scope", instructions)
+        self.assertIn(
+            "existing script and runner semantics establish selectivity",
+            instructions,
+        )
+
     def test_cline_adoption_envelope_includes_safe_inspection_rules(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             envelope = assemble_run(
@@ -433,9 +471,9 @@ class RuntimeTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(version.returncode, 0, version.stderr)
-            self.assertEqual(version.stdout.strip(), "0.3.1")
+            self.assertEqual(version.stdout.strip(), "0.3.2")
             active = json.loads((home / "active.json").read_text(encoding="utf-8"))
-            self.assertEqual(active["version"], "0.3.1")
+            self.assertEqual(active["version"], "0.3.2")
 
 
 if __name__ == "__main__":

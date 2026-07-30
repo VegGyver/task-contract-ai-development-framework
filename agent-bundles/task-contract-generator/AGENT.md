@@ -27,7 +27,7 @@ Do not load the full framework.
 5. Preserve existing code and capabilities.
 6. Use verified local standards first; where absent, require official version-compatible guidance.
 7. Select the check mode; default to `DEVELOPER_RUN`.
-8. List one to three relevant checks in executable order. Include only necessary prerequisites, before the checks that depend on them; prerequisites count toward the one-to-three-check limit.
+8. List one to three relevant checks in executable order. In `DEVELOPER_RUN`, provide exact commands, wait for developer-reported results and never execute, infer or invent results. Describe each command by its effective scope; use `targeted` only when the existing script and runner semantics establish selectivity. Include only necessary prerequisites before dependent checks; prerequisites count toward the limit.
 9. Stop if goal, expected behavior or edit surface cannot be determined safely.
 
 ## Generation policy

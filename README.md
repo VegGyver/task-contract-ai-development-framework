@@ -2,7 +2,7 @@
 
 A lightweight, model-agnostic framework for bounded, reviewable and incremental AI-assisted software development.
 
-Version: **v0.3.1 architecture-A draft**
+Version: **v0.3.2 architecture-A draft**
 
 ## Core formula
 
@@ -49,7 +49,7 @@ operation
 
 Users select an operation or public agent ID, not framework files. The same protocol applies to greenfield targets without a repository, existing projects, daily tasks and future agents.
 
-The envelope declares its adapter transport. Cline currently uses the verified `manual-envelope` procedure in `adapters/cline.md`; native runner-to-Cline invocation remains unverified.
+The envelope declares its adapter transport. Native Codex invocation is verified. Cline currently uses the verified `manual-envelope` procedure in `adapters/cline.md`; native runner-to-Cline invocation remains unverified.
 
 ## Architecture
 
