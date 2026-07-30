@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "default": "generic-cli",
+  "selection_order": [
+    "host-provided adapter id",
+    "TCAF_ADAPTER",
+    "environment detection",
+    "default"
+  ],
+  "adapters": {
+    "codex": {
+      "instructions": "adapters/codex.md",
+      "detect_environment_prefixes": ["CODEX_"],
+      "direct_target_access": true,
+      "direct_edit_access": true,
+      "transport": "native",
+      "native_invocation_verified": false
+    },
+    "cline": {
+      "instructions": "adapters/cline.md",
+      "detect_environment_prefixes": ["CLINE_"],
+      "direct_target_access": true,
+      "direct_edit_access": true,
+      "transport": "manual-envelope",
+      "native_invocation_verified": false
+    },
+    "generic-chat": {
+      "instructions": "adapters/generic-chat.md",
+      "detect_environment_prefixes": [],
+      "direct_target_access": false,
+      "direct_edit_access": false,
+      "transport": "host-resource",
+      "native_invocation_verified": false
+    },
+    "generic-cli": {
+      "instructions": "adapters/generic-cli.md",
+      "detect_environment_prefixes": [],
+      "direct_target_access": true,
+      "direct_edit_access": false,
+      "transport": "stdout",
+      "native_invocation_verified": false
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "run_protocol_version": "1.0",
+  "framework_version": "0.3.0",
+  "operations": {
+    "bootstrap": {
+      "agent": "project-bootstrap",
+      "aliases": ["start-new-project"]
+    },
+    "adopt": {
+      "agent": "existing-project-adoption",
+      "aliases": ["adopt-existing-project"]
+    },
+    "task": {
+      "agent": "task-contract-generator",
+      "aliases": ["generate-task-contract"]
+    }
+  },
+  "agents": {
+    "project-bootstrap": {
+      "manifest": "agent-bundles/project-bootstrap/manifest.json"
+    },
+    "existing-project-adoption": {
+      "manifest": "agent-bundles/existing-project-adoption/manifest.json"
+    },
+    "task-contract-generator": {
+      "manifest": "agent-bundles/task-contract-generator/manifest.json"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "agent_id": "task-contract-generator",
+  "operation": "task",
+  "agent_instructions": "AGENT.md",
+  "entrypoint": "START.md",
+  "output_schema": "OUTPUT-SCHEMA.md",
+  "required_modules": [
+    "../../core/task-contract.md",
+    "../../core/task-types.md"
+  ],
+  "target": {
+    "required": true,
+    "must_exist": true,
+    "allowed_kinds": ["directory", "file", "archive", "host-resource"]
+  },
+  "target_modules": [
+    {
+      "role": "project_rules",
+      "when": "if-present",
+      "fallback_module": "../../runtime/standalone-rules-compact.md"
+    },
+    {
+      "role": "task_naming",
+      "when": "if-present"
+    },
+    {
+      "role": "capability_baseline",
+      "when": "if-present"
+    }
+  ],
+  "optional_modules": {
+    "max_selected": 1,
+    "selectors": {
+      "decomposition": "../../guides/task-decomposition.md",
+      "history": "../../guides/change-management-and-history.md",
+      "review": "../../guides/review-and-verification.md",
+      "team": "../../guides/team-and-multi-agent.md",
+      "advanced-scenario": "../../guides/advanced-scenarios.md"
+    }
+  }
+}

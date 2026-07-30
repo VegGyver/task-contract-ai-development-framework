@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "agent_id": "project-bootstrap",
+  "operation": "bootstrap",
+  "agent_instructions": "AGENT.md",
+  "entrypoint": "START.md",
+  "output_schema": "OUTPUT-SCHEMA.md",
+  "required_modules": [
+    "../../core/project-documentation-schema.md",
+    "../../templates/project-docs/project-brief.md",
+    "../../templates/project-docs/architecture-overview.md",
+    "../../templates/project-docs/backlog.md",
+    "../../templates/project-docs/project-rules.md",
+    "../../templates/project-docs/ai-workflow.md",
+    "../../templates/project-docs/capability-baseline.md",
+    "../../templates/project-docs/task-naming.md",
+    "../../templates/project-docs/project-manifest.md",
+    "../../templates/project-docs/schema-validation-checklist.md"
+  ],
+  "target": {
+    "required": true,
+    "must_exist": false,
+    "allowed_kinds": ["planned-directory", "directory", "file", "archive", "host-resource"]
+  },
+  "target_modules": [],
+  "optional_modules": {
+    "max_selected": 1,
+    "selectors": {
+      "execution-profile": "../../guides/execution-profiles.md",
+      "team": "../../guides/team-and-multi-agent.md",
+      "advanced-scenario": "../../guides/advanced-scenarios.md"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.3.0",
+  "roles": {
+    "project_brief": {
+      "label": "Project brief",
+      "default_path": "docs/project-brief.md",
+      "template": "templates/project-docs/project-brief.md",
+      "required": true,
+      "required_headings": ["# Project Brief", "## Goal", "## Users / stakeholders", "## In scope", "## Out of scope", "## Constraints", "## Success criteria", "## Open decisions"]
+    },
+    "architecture_overview": {
+      "label": "Architecture overview",
+      "default_path": "docs/architecture-overview.md",
+      "template": "templates/project-docs/architecture-overview.md",
+      "required": true,
+      "required_headings": ["# Architecture Overview", "## Applications / packages", "## Main technologies", "## Layer boundaries", "## Data flow", "## External integrations", "## Existing checks and delivery pipeline", "## Constraints / known risks"]
+    },
+    "backlog": {
+      "label": "Backlog",
+      "default_path": "docs/backlog.md",
+      "template": "templates/project-docs/backlog.md",
+      "required": true,
+      "allow_external_source": true,
+      "required_headings": ["# Backlog"]
+    },
+    "project_rules": {
+      "label": "Project rules",
+      "default_path": "docs/method/project-rules.md",
+      "template": "templates/project-docs/project-rules.md",
+      "required": true,
+      "required_headings": ["# Project Rules", "## Scope", "## Source of truth", "## Working rules", "## Restrictions"]
+    },
+    "ai_workflow": {
+      "label": "AI workflow",
+      "default_path": "docs/method/ai-workflow.md",
+      "template": "templates/project-docs/ai-workflow.md",
+      "required": true,
+      "required_headings": ["# AI-Assisted Workflow"]
+    },
+    "capability_baseline": {
+      "label": "Capability baseline",
+      "default_path": "docs/method/capability-baseline.md",
+      "template": "templates/project-docs/capability-baseline.md",
+      "required": true,
+      "required_headings": ["# Capability Baseline", "## Observed local standards"]
+    },
+    "task_naming": {
+      "label": "Task naming",
+      "default_path": "docs/method/task-naming.md",
+      "template": "templates/project-docs/task-naming.md",
+      "required": true,
+      "required_headings": ["# Task Naming", "## Existing convention", "## Rules"]
+    },
+    "project_manifest": {
+      "label": "Project manifest",
+      "default_path": "docs/method/project-manifest.md",
+      "template": "templates/project-docs/project-manifest.md",
+      "required": false,
+      "required_headings": ["# Project Documentation Manifest", "## Role-to-path mappings", "## Optional modules enabled", "## Approved deviations", "## Open documentation decisions"]
+    }
+  }
+}

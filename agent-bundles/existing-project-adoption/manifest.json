@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "agent_id": "existing-project-adoption",
+  "operation": "adopt",
+  "agent_instructions": "AGENT.md",
+  "entrypoint": "START.md",
+  "output_schema": "OUTPUT-SCHEMA.md",
+  "required_modules": [
+    "../../runtime/standalone-rules-compact.md",
+    "../../core/project-documentation-schema.md",
+    "../../guides/architecture-capability-baseline.md",
+    "../../guides/change-management-and-history.md"
+  ],
+  "target": {
+    "required": true,
+    "must_exist": true,
+    "allowed_kinds": ["directory", "file", "archive", "host-resource"]
+  },
+  "target_modules": [],
+  "optional_modules": {
+    "max_selected": 1,
+    "selectors": {
+      "project-rules-template": "../../templates/project-docs/project-rules.md",
+      "capability-baseline-template": "../../templates/project-docs/capability-baseline.md",
+      "task-naming-template": "../../templates/project-docs/task-naming.md",
+      "project-manifest-template": "../../templates/project-docs/project-manifest.md"
+    }
+  }
+}
