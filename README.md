@@ -1,83 +1,200 @@
-# Task-Contract AI Development Framework
+# TCAF — Task-Contract AI Development Framework
 
-A lightweight, model-agnostic framework for bounded, reviewable and incremental AI-assisted software development.
+**Clear constraints for AI. Control and flexibility for the developer.**
 
-Version: **v0.3.3 architecture-A draft**
+TCAF is a model-agnostic framework for controlled AI-assisted software development.
 
-## Core formula
+It lets developers and engineering teams delegate selected work to AI tools while keeping scope, technical decisions, verification and final acceptance explicit and human-owned.
 
-```txt
-Repo-first
-Task-contract driven
-Minimum-first
-Outcome-first
-Standardized
-Model-agnostic
-Tool-resilient
-Human-reviewed
+**Current version: 0.3.3 · Public preview**
+
+## Why TCAF
+
+AI coding agents can accelerate development, but greater autonomy can also produce:
+
+- unintended changes outside the requested scope;
+- opportunistic refactoring;
+- assumptions treated as requirements;
+- modifications that are difficult to review or verify;
+- loss of clarity about what the developer actually authorized.
+
+TCAF addresses this through bounded, reviewable tasks.
+
+The AI can work freely **inside the approved task boundary**.  
+The developer remains in control of the software.
+
+## How it works
+
+A typical TCAF task follows this flow:
+
+```text
+Developer request
+      ↓
+Project inspection
+      ↓
+Task Contract
+      ↓
+Developer review
+      ↓
+Implementation
+      ↓
+Verification
+      ↓
+Evidence + outcome
+      ↓
+Human acceptance
 ```
 
-## Install once
+The **Task Contract** makes the work explicit before implementation begins:
 
-```txt
+- objective;
+- authorized change surface;
+- behaviour and areas to preserve;
+- acceptance criteria;
+- verification checks;
+- stop conditions.
+
+## Quick start
+
+### 1. Get TCAF
+
+```bash
+git clone https://github.com/VegGyver/task-contract-ai-development-framework.git
+cd task-contract-ai-development-framework
+```
+
+### 2. Install
+
+```bash
 python install.py
+```
+
+Then verify the installation:
+
+```bash
 tcaf doctor
 ```
 
-The versioned runtime is installed outside target projects. Framework files are never added as a second workspace root or copied into a project for ordinary use.
+A valid installation should report `PASS`.
 
-## One procedure
+## Choose your starting point
 
-```txt
-tcaf bootstrap --target <target> [--request <text> | --input <path>]
-tcaf adopt --target <target>
-tcaf task --target <target> --request <bounded request>
-tcaf run <future-agent-id> --target <target>
+### Start a new project
+
+```bash
+tcaf bootstrap --target <target> --request "<what you want to build>"
 ```
 
-Every operation uses:
+Use `bootstrap` when you are starting from an idea, analysis, scaffold, roadmap or initial task.
 
-```txt
-operation
-→ registry
-→ agent manifest
-→ automatic module loading
-→ exactly one target
-→ adapter
-→ run envelope
-→ developer review gate
+### Adopt an existing project
+
+```bash
+tcaf adopt --target <project-path>
 ```
 
-Users select an operation or public agent ID, not framework files. The same protocol applies to greenfield targets without a repository, existing projects, daily tasks and future agents.
+TCAF inspects the existing project before proposing canonical project evidence. Adoption does not silently modify application code.
 
-A greenfield bootstrap may start from a complete analysis, a product idea, an initialized target, an initial roadmap or one first task. A repository backlog is optional when the manifest declares another task source, including direct developer requests.
+### Run a development task
 
-The envelope declares its adapter transport. Native Codex invocation is verified. Cline currently uses the verified `manual-envelope` procedure in `adapters/cline.md`; native runner-to-Cline invocation remains unverified.
+```bash
+tcaf task --target <project-path> --request "<bounded change>"
+```
 
-## Architecture
+TCAF analyses the relevant project context and prepares a Task Contract for developer review before implementation authority expands.
 
-- `registry/agents.json` resolves operations and agents.
-- Each `agent-bundles/*/manifest.json` declares exact modules and target policy.
-- `runtime/tcaf.py` is the reference Universal Runner.
-- `registry/adapters.json` selects one tool adapter without changing core behavior.
-- `registry/project-schema.json` validates canonical project-document roles.
-- framework instructions and target evidence remain separate.
+## Example
+
+Suppose you want to add a status filter to an existing application:
+
+```bash
+tcaf task \
+  --target ./my-app \
+  --request "Add an All / Active / Completed filter to the task list"
+```
+
+Before implementation, TCAF establishes the task boundary.
+
+For example:
+
+```text
+Objective
+Add a three-state filter to the existing task list.
+
+Allowed
+- task-list UI
+- local filtering logic
+- tests directly related to the filter
+
+Preserve
+- existing persistence
+- routing
+- unrelated styling
+- current task creation behaviour
+
+Acceptance
+- All shows every task
+- Active shows incomplete tasks
+- Completed shows completed tasks
+- existing behaviour still works
+```
+
+Only after review does implementation proceed.
+
+The result is then verified and reported with executed evidence and any remaining limitations.
+
+## Core principles
+
+TCAF is designed around a few rules:
+
+- **Engineering-owned** — architecture, product intent and final decisions remain human decisions.
+- **Bounded delegation** — AI receives an explicit scope rather than open-ended authority.
+- **Inspect-first** — the current project is examined before changes are proposed.
+- **Preservation-first** — working behaviour and local patterns are preserved unless change is explicitly authorized.
+- **Minimum-first** — implement the smallest coherent change that satisfies the task.
+- **Evidence before acceptance** — verification claims require executed evidence.
+- **Model-agnostic** — the framework is not tied to one AI model or provider.
+
+## Adapter coverage
+
+TCAF 0.3.3 currently includes:
+
+- **Codex** — native invocation verified;
+- **Cline** — manual-envelope workflow verified with documented limitations;
+- **Generic CLI** and **Generic Chat** transports for compatible environments, with broader validation still in progress.
+
+Adapter coverage can expand without changing the core authorization model.
 
 ## Validation
 
-```txt
+You can validate the installed release and, when relevant, a target project:
+
+```bash
 tcaf validate
 tcaf validate --target <project-path>
 ```
 
-Release validation checks version coherence, registries, manifests, module paths, adapters, templates and project-document structure.
+TCAF 0.3.3 is a **public pre-1.0 release**.
 
-## Standard procedures
+The runtime, installation flow and selected adapter/workflow paths have been exercised on real or representative software-development scenarios. Validation is intentionally scoped: support for additional models, hosts and project configurations is being expanded progressively.
 
-- `procedures/start-new-project.md`
-- `procedures/adopt-existing-project.md`
-- `procedures/run-development-task.md`
+## Documentation
 
-## Current status
+**Quick start and full documentation**
 
-This is a pre-1.0 draft implementing approved Architecture A from the v0.2.7 calibrated core. Version v0.2.8 is discarded. Runtime tests validate the operational layer; clean model acceptance tests remain required before a stable release.
+- English: https://framework.angelinilabs.dev/en/docs/
+- Italiano: https://framework.angelinilabs.dev/it/docs/
+
+The documentation is organized to let new users install TCAF, run a first workflow and see a complete example before moving into concepts and reference material.
+
+## Project status
+
+TCAF is under active development.
+
+The framework core is intentionally model-agnostic. Current work focuses on expanding validation coverage, improving reproducibility across environments and testing additional model/provider profiles while preserving explicit developer authority over AI execution.
+
+## AngeliniLabs
+
+TCAF is developed as part of the AngeliniLabs R&D work on controlled AI-assisted software development and software-delivery governance.
+
+https://angelinilabs.dev/
