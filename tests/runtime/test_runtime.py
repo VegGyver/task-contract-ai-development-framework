@@ -526,6 +526,58 @@ class RuntimeTests(unittest.TestCase):
             any(path.endswith("core/project-documentation-schema.md") for path in module_paths)
         )
 
+    def test_bootstrap_normalizes_free_form_sources_and_runtime_validation_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / "project"
+            docs = target / "docs"
+            docs.mkdir(parents=True)
+            source_documents = {
+                "PROJECT_CONTEXT.md": "# Project context\n\nBuild a small task service.\n",
+                "reality-error-logical-architecture-v0.1.html": (
+                    "<h1>Architecture notes</h1><p>Use a service layer.</p>"
+                ),
+                "PROJECT_PLAN.md": "# Project plan\n\n- Discover the first milestone.\n",
+            }
+            source_bytes: dict[str, bytes] = {}
+            for name, content in source_documents.items():
+                path = docs / name
+                path.write_text(content, encoding="utf-8")
+                source_bytes[name] = path.read_bytes()
+
+            # This is the approved bootstrap write step: incompatible source
+            # evidence is preserved while canonical roles come from templates.
+            self._canonical_project(target)
+
+            for name, original in source_bytes.items():
+                self.assertEqual((docs / name).read_bytes(), original)
+            schema = load_project_schema(FRAMEWORK_ROOT)
+            for role_id in ("project_brief", "architecture_overview", "backlog"):
+                resolved = resolve_target_role(target, role_id, schema)
+                self.assertEqual(
+                    resolved,
+                    target / schema["roles"][role_id]["default_path"],
+                )
+            self.assertFalse((target / "docs" / "method" / "project-manifest.md").exists())
+
+            result = validate_target(FRAMEWORK_ROOT, target)
+
+        self.assertTrue(result["valid"], result["issues"])
+
+    def test_bootstrap_bundle_requires_normalization_and_pending_validation(self) -> None:
+        bundle = FRAMEWORK_ROOT / "agent-bundles" / "project-bootstrap"
+        agent = (bundle / "AGENT.md").read_text(encoding="utf-8")
+        start = (bundle / "START.md").read_text(encoding="utf-8")
+        output = (bundle / "OUTPUT-SCHEMA.md").read_text(encoding="utf-8")
+
+        self.assertIn("Treat every supplied file and directory as source evidence by default", agent)
+        self.assertIn("compare it with that role's machine\nschema", agent)
+        self.assertIn("preserve the source file byte-for-byte", agent)
+        self.assertIn("approved alternate canonical path", agent)
+        self.assertIn("Never map source evidence directly to a canonical\nrole", start)
+        self.assertIn("VALIDATION PENDING", start)
+        self.assertIn("tcaf validate --target .", output)
+        self.assertIn("Do not use `Validation: PASS`", output)
+
     def test_resolve_target_role_reuses_valid_canonical_documents(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)
