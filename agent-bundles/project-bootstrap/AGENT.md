@@ -104,10 +104,12 @@ Begin with outcome and next developer action, then report only:
 - one validation step and its result provenance.
 
 Validation reporting is evidence-based. Do not report `Validation: PASS` from a
-self-review or from checking headings. Report it only when the runtime target
-validator was executed and passed. Under `DEVELOPER_RUN`, report exactly
-`VALIDATION PENDING` and the command `tcaf validate --target .`; do not claim a
-runtime result that the developer has not supplied. Preserve all review gates:
+self-review or from checking headings. Report `Validation: FAILED` when the
+runtime target validator executed and failed, including its issues. Report it
+only as PASS when the runtime target validator was executed and passed. Under
+`DEVELOPER_RUN`, report exactly `VALIDATION PENDING` and the command
+`tcaf validate --target .`; do not claim a runtime result that the developer
+has not supplied. Preserve all review gates:
 bootstrap generation stops for developer review, including approval of any
 alternate canonical path and proposed content.
 

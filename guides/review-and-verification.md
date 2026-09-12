@@ -1,6 +1,8 @@
 # Review and Verification
 
 Human review is mandatory. Agent self-checks are evidence, not acceptance.
+Use `core/validation-evidence.md` for the authoritative project-validation,
+task-check and lifecycle-evidence rules.
 
 ## Check modes
 
@@ -31,7 +33,7 @@ Keep a normal success response brief. Add evidence, alternatives or explanation 
 
 ## Outcome labels
 
-- `PASS` — the contracted result is present and every required check already run has passed. This does not imply developer acceptance or commit.
+- `PASS` — every required check was actually executed and passed. This does not imply developer acceptance or commit.
 - `READY FOR CHECK` — implementation is present and a declared developer or manual verification remains.
 - `PARTIAL` — the contract is not fully satisfied; identify completed and remaining work.
 - `BLOCKED` — state the invalid assumption or required decision and do not broaden the task.

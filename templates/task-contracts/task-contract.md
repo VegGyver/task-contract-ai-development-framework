@@ -33,3 +33,7 @@ Scope boundaries:
 Stop conditions:
 Stop:
 ```
+
+Required-check evidence must use `PASS` only for an executed successful check,
+`FAILED` for an executed failed check, and `NOT RUN` or `PENDING` otherwise.
+Aggregate verification is `passed` only when every required check is `PASS`.

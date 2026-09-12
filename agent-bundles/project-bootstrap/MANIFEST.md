@@ -10,6 +10,7 @@ Human-readable mirror of `manifest.json`. The JSON manifest is machine-authorita
 
 ## Required framework modules
 
+- `../../core/validation-evidence.md`
 - `../../core/project-documentation-schema.md`
 - every canonical project-document template declared explicitly in `manifest.json`
 - `../../templates/project-docs/schema-validation-checklist.md`

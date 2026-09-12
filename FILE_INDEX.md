@@ -29,7 +29,7 @@ Each canonical bundle has a machine-authoritative `manifest.json`. `MANIFEST.md`
 
 ## Framework modules
 
-- `core/`: principles, run/target/adapter protocols, contracts, lifecycle, schema and module loading
+- `core/`: principles, run/target/adapter protocols, contracts, lifecycle, validation evidence, schema and module loading
 - `guides/`: optional specialist guidance
 - `runtime/`: compact model-facing rules
 - `templates/`: canonical project and task templates
@@ -37,6 +37,6 @@ Each canonical bundle has a machine-authoritative `manifest.json`. `MANIFEST.md`
 - `examples/`: compact examples
 - `tests/acceptance/`: repeatable framework acceptance tests
 
-Active-task amendments and developer/concurrent edits are defined in `core/task-contract.md` and `guides/change-management-and-history.md`. Outcome labels and concise response order are defined in `core/task-lifecycle.md` and `guides/review-and-verification.md`.
+Active-task amendments and developer/concurrent edits are defined in `core/task-contract.md` and `guides/change-management-and-history.md`. Evidence-based validation and check reporting are defined in `core/validation-evidence.md`. Outcome labels and concise response order are defined in `core/task-lifecycle.md` and `guides/review-and-verification.md`.
 
 Legacy single-file agent profiles remain under `agents/` as unregistered references; the runner uses only registered canonical bundles.

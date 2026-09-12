@@ -40,7 +40,7 @@ Do not call work `complete` when it is only implemented. Report the exact state.
 
 ## Operational outcome labels
 
-- `PASS` — contracted implementation and required checks passed; developer acceptance may still be pending.
+- `PASS` — every required check was actually executed and passed; developer acceptance may still be pending. Never infer it from generated content, self-review, or `Status: Completed`.
 - `READY FOR CHECK` — implementation is ready, but one or more declared developer or manual checks remain.
 - `PARTIAL` — only part of the approved contract is satisfied.
 - `BLOCKED` — a decision, dependency or corrected contract is required.

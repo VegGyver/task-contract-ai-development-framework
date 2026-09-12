@@ -872,6 +872,55 @@ class RuntimeTests(unittest.TestCase):
         self.assertIn("tcaf validate --target .", output)
         self.assertIn("Do not use `Validation: PASS`", output)
 
+    def test_validation_evidence_rules_are_shared_across_relevant_bundles(self) -> None:
+        evidence = (FRAMEWORK_ROOT / "core" / "validation-evidence.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("Validation: PASS", evidence)
+        self.assertIn("Validation: PENDING", evidence)
+        self.assertIn("Validation: FAILED", evidence)
+        self.assertIn("tcaf validate --target <target>", evidence)
+        self.assertIn("Aggregate task verification is `passed` only", evidence)
+        self.assertIn("Status:\nCompleted", evidence)
+
+        for bundle in (
+            "project-bootstrap",
+            "existing-project-adoption",
+            "task-contract-generator",
+        ):
+            manifest = json.loads(
+                (FRAMEWORK_ROOT / "agent-bundles" / bundle / "manifest.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertIn("../../core/validation-evidence.md", manifest["required_modules"])
+
+    def test_bootstrap_and_adoption_require_pending_validation_before_execution(self) -> None:
+        for bundle in ("project-bootstrap", "existing-project-adoption"):
+            content = "\n".join(
+                (FRAMEWORK_ROOT / "agent-bundles" / bundle / name).read_text(
+                    encoding="utf-8"
+                )
+                for name in ("AGENT.md", "START.md", "OUTPUT-SCHEMA.md")
+            )
+            self.assertIn("VALIDATION PENDING", content)
+            self.assertIn("tcaf validate --target .", content)
+            self.assertIn("Validation: FAILED", content)
+            self.assertIn("Validation: PASS", content)
+
+    def test_task_checks_cannot_hide_aggregate_failure_or_completed_status(self) -> None:
+        content = "\n".join(
+            (FRAMEWORK_ROOT / path).read_text(encoding="utf-8")
+            for path in (
+                "core/task-contract.md",
+                "agent-bundles/task-contract-generator/AGENT.md",
+                "agent-bundles/task-contract-generator/OUTPUT-SCHEMA.md",
+            )
+        )
+        self.assertIn("aggregate `Verification: passed`", content)
+        self.assertIn("lower-level diagnostics pass", content)
+        self.assertIn("Do not infer review approval, executed verification, or a commit from `Status`", content)
+
     def test_resolve_target_role_reuses_valid_canonical_documents(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)

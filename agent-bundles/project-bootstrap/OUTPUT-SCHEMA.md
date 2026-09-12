@@ -18,7 +18,7 @@ Validation status must be one of:
   command `tcaf validate --target .`;
 - `Validation: PASS` — only when `tcaf validate --target .` (or the equivalent
   runtime validator for the bound target) was executed and passed; or
-- `Validation: FAIL` — only with the executed command and reported failures.
+- `Validation: FAILED` — only with the executed command and reported failures.
 
 Do not use `Validation: PASS` for template inspection, heading inspection, or
 an anticipated developer result.

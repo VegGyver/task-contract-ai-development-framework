@@ -51,4 +51,6 @@ Keep successful sections concise. Add explanation only for missing, conflicting 
 
 Validation status must be evidence-based: under `DEVELOPER_RUN`, use
 `VALIDATION PENDING` followed by `tcaf validate --target .`. Use
-`Validation: PASS` only when that command was actually executed and passed.
+`Validation: FAILED` when that command executed and failed, including the
+issues. Use `Validation: PASS` only when that command was actually executed
+and passed.

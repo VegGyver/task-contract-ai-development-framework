@@ -6,6 +6,7 @@
   "entrypoint": "START.md",
   "output_schema": "OUTPUT-SCHEMA.md",
   "required_modules": [
+    "../../core/validation-evidence.md",
     "../../core/project-documentation-schema.md",
     "../../templates/project-docs/project-brief.md",
     "../../templates/project-docs/architecture-overview.md",

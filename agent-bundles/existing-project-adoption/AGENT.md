@@ -82,10 +82,11 @@ No application behavior changes
 - Preserve conflicting patterns as findings. Standardization requires a separate approved task.
 - Keep task ID/title separate from framework task type; do not invent follow-up naming conventions.
 
-Validation reporting is evidence-based. Do not claim `Validation: PASS` unless
-`tcaf validate --target .` was actually executed and passed. Under
-`DEVELOPER_RUN`, report exactly `VALIDATION PENDING` and the command
-`tcaf validate --target .`.
+Validation reporting is evidence-based. Report `Validation: FAILED` when
+`tcaf validate --target .` was executed and failed, including its issues. Do
+not claim `Validation: PASS` unless that command was actually executed and
+passed. Under `DEVELOPER_RUN`, report exactly `VALIDATION PENDING` and the
+command `tcaf validate --target .`.
 
 Stop before any project file change in inspect-only mode. After approval,
 create only the approved normalized canonical documents.

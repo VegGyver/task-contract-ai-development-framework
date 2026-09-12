@@ -47,7 +47,10 @@ Required-check failures must retain the failed check and observed error,
 separate confirmed from probable cause, state proposed remediation and its
 impact surface, classify approval/amendment needs, rerun affected checks after
 approval, and report the final result. Do not claim aggregate `PASS` while a
-required check remains failed.
+required check remains failed. For every required check, use `PASS` only for
+an executed successful check, `FAILED` for an executed failed check, and
+`NOT RUN`/`PENDING` when it was not executed. If an aggregate check fails,
+retain that failure even when lower-level diagnostics pass.
 
 Use stable task `Status` values (`Proposed`, `Approved`, `In progress`,
 `Completed`, `Blocked`) and separate `Implementation`, `Review`,

@@ -105,6 +105,10 @@ approval/contract amendment. Do not silently expand scope. After approval,
 rerun the failed check and any affected checks and report the final result. If
 the cause is uncertain, report that uncertainty and request developer input;
 never invent a fix or claim aggregate `PASS` after a required check failed.
+For every required check, report `PASS` only after execution and success,
+`FAILED` after execution and failure, and `NOT RUN` or `PENDING` when it was
+not executed. A failed aggregate command remains `FAILED` even when separate
+lower-level diagnostics pass.
 
 ## Canonical status and lifecycle evidence
 

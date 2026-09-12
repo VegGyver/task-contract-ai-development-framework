@@ -25,3 +25,8 @@ do not infer it from `Status`. Record verification and commit only from actual
 evidence, and record review approval only after explicit developer approval.
 
 Completed records are historical. Add later changes as linked tasks; do not rewrite completed scope.
+
+For each required check, `PASS` means the check was executed and succeeded;
+`FAILED` means it was executed and failed; `NOT RUN`/`PENDING` means no result
+exists. Aggregate `Verification: passed` requires every required check to be
+`PASS`. A failed aggregate check is not made successful by passing diagnostics.

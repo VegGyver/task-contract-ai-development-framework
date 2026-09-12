@@ -6,6 +6,7 @@
   "entrypoint": "START.md",
   "output_schema": "OUTPUT-SCHEMA.md",
   "required_modules": [
+    "../../core/validation-evidence.md",
     "../../runtime/standalone-rules-compact.md",
     "../../core/project-documentation-schema.md",
     "../../guides/architecture-capability-baseline.md",

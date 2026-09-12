@@ -101,6 +101,12 @@ been affected, then report the final result. If the cause is uncertain,
 request developer input rather than inventing a fix. A failed required
 aggregate check remains a failure until resolved.
 
+For each required check, record `PASS` only when it was executed and
+succeeded, `FAILED` when it was executed and failed, and `NOT RUN` or
+`PENDING` when it was not executed. Lower-level diagnostic successes do not
+replace a failed aggregate check, and aggregate `Verification: passed` is
+allowed only when every required check is `PASS`.
+
 ## Canonical task status and lifecycle evidence
 
 Use one stable task `Status` value: `Proposed`, `Approved`, `In progress`,

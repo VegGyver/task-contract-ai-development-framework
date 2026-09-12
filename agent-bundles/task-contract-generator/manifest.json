@@ -6,6 +6,7 @@
   "entrypoint": "START.md",
   "output_schema": "OUTPUT-SCHEMA.md",
   "required_modules": [
+    "../../core/validation-evidence.md",
     "../../core/task-contract.md",
     "../../core/task-types.md",
     "../../core/project-documentation-schema.md"
