@@ -1,0 +1,15 @@
+# TCAF 0.4 Milestone 040-04 — Feature planning
+
+Implemented `tcaf plan --target <project> --request "<feature or outcome>"` as
+a registered Universal Run Protocol operation. The feature-planner bundle is
+canonical-first, architecture-aware and read-only until explicit developer
+approval.
+
+The planner distinguishes feature membership from external prerequisites and
+reused capabilities, preserves separate feature/task namespaces, reuses
+canonical tasks before proposing missing work, and requires next-executable
+work in its developer review output. It uses the authoritative validation
+evidence rules and reports pending validation when no validator result exists.
+
+No application code, canonical backlog, status, Task Contract, permanent task
+ID or feature specification is written during the initial planning pass.

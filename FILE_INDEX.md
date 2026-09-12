@@ -24,6 +24,7 @@
 - `agent-bundles/project-bootstrap/`
 - `agent-bundles/existing-project-adoption/`
 - `agent-bundles/task-contract-generator/`
+- `agent-bundles/feature-planner/`
 
 Each canonical bundle has a machine-authoritative `manifest.json`. `MANIFEST.md` is its human-readable mirror.
 

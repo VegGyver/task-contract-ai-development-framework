@@ -1039,6 +1039,72 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(payload["agent_id"], "task-contract-generator")
         self.assertEqual(payload["target"]["kind"], "directory")
 
+    def test_plan_is_registered_and_assembles_a_review_only_envelope(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(FRAMEWORK_ROOT / "runtime" / "tcaf.py"),
+                    "plan",
+                    "--target",
+                    temporary,
+                    "--request",
+                    "Plan the first verified-content vertical slice.",
+                    "--adapter",
+                    "generic-cli",
+                    "--format",
+                    "json",
+                ],
+                cwd=FRAMEWORK_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["operation"], "plan")
+        self.assertEqual(payload["agent_id"], "feature-planner")
+        self.assertIn("WAITING FOR APPROVAL", "\n".join(
+            module["content"] for module in payload["instruction_modules"]
+        ))
+
+    def test_plan_loads_canonical_roles_and_rules_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan a feature.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        roles = {item["role"] for item in envelope["instruction_modules"]}
+        self.assertIn("project_brief", roles)
+        self.assertIn("backlog", roles)
+        self.assertIn("project_rules", roles)
+        self.assertIn("task_naming", roles)
+
+    def test_plan_does_not_write_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            before = sorted(path.relative_to(target) for path in target.rglob("*"))
+            assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan a feature.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+            after = sorted(path.relative_to(target) for path in target.rglob("*"))
+        self.assertEqual(before, after)
+
     def test_cli_rendered_task_contract_labels_canonical_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)

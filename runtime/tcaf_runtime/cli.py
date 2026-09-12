@@ -44,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for operation in ("bootstrap", "adopt", "task"):
+    for operation in ("bootstrap", "adopt", "task", "plan"):
         operation_parser = subparsers.add_parser(operation)
         _add_run_arguments(operation_parser)
 
@@ -85,8 +85,8 @@ def _print_validation(result: dict[str, Any], output_format: str) -> None:
 
 
 def _run_operation(args: argparse.Namespace, root: Path) -> int:
-    if args.command == "task" and not args.request and not args.input:
-        raise TcafError("The task operation requires --request or --input")
+    if args.command in {"task", "plan"} and not args.request and not args.input:
+        raise TcafError(f"The {args.command} operation requires --request or --input")
     direct_agent = args.command == "run"
     selected = args.agent_id if direct_agent else args.command
     envelope = assemble_run(
@@ -148,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
     root = _framework_root()
     args = build_parser().parse_args(argv)
     try:
-        if args.command in {"bootstrap", "adopt", "task", "run"}:
+        if args.command in {"bootstrap", "adopt", "task", "plan", "run"}:
             return _run_operation(args, root)
         if args.command == "list":
             registry = load_agents_registry(root)

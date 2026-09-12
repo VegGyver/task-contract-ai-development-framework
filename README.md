@@ -32,6 +32,7 @@ The versioned runtime is installed outside target projects. Framework files are 
 tcaf bootstrap --target <target> [--request <text> | --input <path>]
 tcaf adopt --target <target>
 tcaf task --target <target> --request <bounded request>
+tcaf plan --target <target> --request <feature or outcome>
 tcaf run <future-agent-id> --target <target>
 ```
 

@@ -14,6 +14,10 @@
     "task": {
       "agent": "task-contract-generator",
       "aliases": ["generate-task-contract"]
+    },
+    "plan": {
+      "agent": "feature-planner",
+      "aliases": ["feature-plan"]
     }
   },
   "agents": {
@@ -25,6 +29,9 @@
     },
     "task-contract-generator": {
       "manifest": "agent-bundles/task-contract-generator/manifest.json"
+    },
+    "feature-planner": {
+      "manifest": "agent-bundles/feature-planner/manifest.json"
     }
   }
 }
