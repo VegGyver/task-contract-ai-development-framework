@@ -1,0 +1,91 @@
+# TCAF 0.4.0 — Task 040-01
+
+## Goal
+
+Fix greenfield bootstrap normalization so arbitrary user documentation is treated as source evidence rather than assumed to already be canonical TCAF project documentation.
+
+The behavior must support a first-time user who supplies an arbitrary file or directory containing project analysis, specifications, architecture notes, roadmap material, or partial documentation.
+
+## Current defect
+
+In TCAF 0.3.3, bootstrap can map arbitrary source documents directly to canonical roles (for example project_brief, architecture_overview, backlog). `tcaf validate --target` then validates those arbitrary documents against canonical TCAF headings and fails.
+
+This violates the intended workflow:
+user input -> TCAF interpretation/normalization -> canonical project state.
+
+## Required behavior
+
+1. Treat bound bootstrap input as source material/evidence by default.
+2. Reuse an existing input file directly as a canonical role only when it already conforms to that role's machine schema.
+3. When it does not conform:
+   - preserve the original source file unchanged;
+   - generate the canonical role document from the official canonical template;
+   - derive only supported content from the source material;
+   - keep missing non-blocking information explicit as `To be decided`, `Not defined`, or the template-approved equivalent;
+   - do not invent project decisions.
+4. Generate a project manifest only when a genuine approved path deviation remains.
+5. Do not use path mapping as a shortcut around canonical schema validation.
+6. Preserve review gates.
+7. Do not change application code in target projects.
+8. Keep compatibility with partial project input and incomplete roadmaps.
+
+## Validation authority
+
+The agent must not state that TCAF validation passed unless the runtime validator was actually executed and its result is available.
+
+Under DEVELOPER_RUN, report:
+- `VALIDATION PENDING`
+- exact command: `tcaf validate --target .`
+
+Do not infer validation success from a self-review of headings.
+
+## Areas to inspect before editing
+
+At minimum inspect:
+- `agent-bundles/project-bootstrap/`
+- `core/project-documentation-schema.md`
+- `registry/project-schema.json`
+- `templates/project-docs/`
+- `runtime/tcaf_runtime/target.py`
+- `runtime/tcaf_runtime/validator.py`
+- existing tests related to bootstrap/project validation
+- README/guides only where needed to keep behavior consistent
+
+## Implementation constraints
+
+- Prefer the smallest coherent change.
+- Preserve 0.3.x behavior that is not involved in this defect.
+- Do not implement `plan` or `sync` in this task.
+- Do not redesign Task Contract generation.
+- Do not weaken canonical validation rules merely to make arbitrary files pass.
+- The fix must be normalization, not validator relaxation.
+- Add or update automated tests that reproduce the Reality Error failure mode with arbitrary non-canonical input docs.
+
+## Acceptance criteria
+
+A test fixture equivalent to this situation must work:
+
+Input directory contains:
+- a free-form `PROJECT_CONTEXT.md`;
+- a free-form project plan/roadmap;
+- arbitrary architecture documentation.
+
+After bootstrap generation and developer-approved write step:
+- original input docs remain unchanged;
+- canonical `project-brief`, `architecture-overview`, `backlog` and method documents exist in validator-compatible form;
+- role mappings do not point non-conformant arbitrary documents directly at canonical roles;
+- no duplicate/alias documents are created merely to satisfy filenames;
+- missing information stays explicit rather than invented;
+- runtime target validation passes for the generated canonical documentation;
+- existing framework validation/tests continue to pass.
+
+## Final response
+
+Report:
+1. files modified;
+2. behavioral change;
+3. tests added/changed;
+4. commands the developer should run;
+5. any unresolved design question that blocks the next 0.4.0 task.
+
+Do not proceed to 040-02.

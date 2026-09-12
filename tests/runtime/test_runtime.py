@@ -18,6 +18,7 @@ from tcaf_runtime.adapter import select_adapter
 from tcaf_runtime.errors import TcafError
 from tcaf_runtime.loader import assemble_run
 from tcaf_runtime.registry import load_project_schema
+from tcaf_runtime.target import resolve_target_role
 from tcaf_runtime.validator import validate_framework, validate_target
 
 
@@ -383,8 +384,13 @@ class RuntimeTests(unittest.TestCase):
                 "- Capability baseline: `project-docs/capabilities.md`\n",
                 encoding="utf-8",
             )
-            for name in ("rules.md", "naming.md", "capabilities.md"):
-                (method / name).write_text(f"# {name}\n", encoding="utf-8")
+            for source, name in (
+                ("project-rules.md", "rules.md"),
+                ("task-naming.md", "naming.md"),
+                ("capability-baseline.md", "capabilities.md"),
+            ):
+                template = FRAMEWORK_ROOT / "templates" / "project-docs" / source
+                (method / name).write_text(template.read_text(encoding="utf-8"), encoding="utf-8")
 
             envelope = assemble_run(
                 FRAMEWORK_ROOT,
@@ -406,6 +412,171 @@ class RuntimeTests(unittest.TestCase):
             roles, {"project_rules", "task_naming", "capability_baseline"}
         )
         self.assertEqual(envelope["unresolved_optional_target_roles"], [])
+
+    def test_task_ignores_non_canonical_role_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            method_dir = target / "docs" / "method"
+            method_dir.mkdir(parents=True)
+            (method_dir / "project-rules.md").write_text(
+                "# Notes\n\n## Project context\n\n- The app will be rebuilt.\n",
+                encoding="utf-8",
+            )
+            (method_dir / "project-manifest.md").write_text(
+                "# Project Documentation Manifest\n\n"
+                "## Role-to-path mappings\n\n"
+                "- Project rules: `docs/method/project-rules.md`\n",
+                encoding="utf-8",
+            )
+
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "task",
+                direct_agent=False,
+                raw_target=str(target),
+                request="Inspect the current behavior.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+
+        roles = {
+            item["role"]
+            for item in envelope["instruction_modules"]
+            if item["source"] == "target"
+        }
+        self.assertNotIn("project_rules", roles)
+        self.assertTrue(
+            any(
+                item["role"] == "fallback:project_rules"
+                for item in envelope["instruction_modules"]
+            )
+        )
+
+    def test_bootstrap_ignores_arbitrary_non_canonical_docs(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / "greenfield"
+            docs = target / "docs"
+            docs.mkdir(parents=True)
+            (docs / "PROJECT_CONTEXT.md").write_text(
+                "# Project context\n\nWe are building a task tool.\n",
+                encoding="utf-8",
+            )
+            (docs / "ROADMAP.md").write_text(
+                "# Roadmap\n\n- Phase 1: research\n- Phase 2: ship\n",
+                encoding="utf-8",
+            )
+            (docs / "architecture-notes.md").write_text(
+                "# Architecture notes\n\nThe app will have a service layer.\n",
+                encoding="utf-8",
+            )
+            for name in ("project-brief.md", "architecture-overview.md", "backlog.md"):
+                (docs / name).write_text(
+                    f"# {name}\n\nThis file is user-provided and not canonical TCAF documentation.\n",
+                    encoding="utf-8",
+                )
+
+            schema = load_project_schema(FRAMEWORK_ROOT)
+            for role_id in ("project_brief", "architecture_overview", "backlog"):
+                self.assertIsNone(
+                    resolve_target_role(target, role_id, schema),
+                    msg=f"non-canonical {role_id} should not resolve as a canonical target role",
+                )
+
+    def test_bootstrap_envelope_exposes_canonical_templates_for_missing_roles(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / "greenfield"
+            input_dir = Path(temporary) / "input"
+            input_dir.mkdir()
+            (input_dir / "PROJECT_CONTEXT.md").write_text(
+                "# Project context\n\nThis is free-form analysis.\n",
+                encoding="utf-8",
+            )
+            (input_dir / "ROADMAP.md").write_text(
+                "# Roadmap\n\n- Step 1: discover\n",
+                encoding="utf-8",
+            )
+            (input_dir / "architecture-notes.md").write_text(
+                "# Architecture\n\nSingle-process service.\n",
+                encoding="utf-8",
+            )
+
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "bootstrap",
+                direct_agent=False,
+                raw_target=str(target),
+                request=None,
+                raw_input=str(input_dir),
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+
+        module_paths = [module["path"] for module in envelope["instruction_modules"]]
+        self.assertTrue(
+            any(path.endswith("templates/project-docs/project-brief.md") for path in module_paths)
+        )
+        self.assertTrue(
+            any(path.endswith("templates/project-docs/architecture-overview.md") for path in module_paths)
+        )
+        self.assertTrue(
+            any(path.endswith("templates/project-docs/backlog.md") for path in module_paths)
+        )
+        self.assertTrue(
+            any(path.endswith("core/project-documentation-schema.md") for path in module_paths)
+        )
+
+    def test_resolve_target_role_reuses_valid_canonical_documents(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            docs = target / "docs"
+            docs.mkdir()
+            for role_id, file_name in (
+                ("project_brief", "project-brief.md"),
+                ("architecture_overview", "architecture-overview.md"),
+                ("backlog", "backlog.md"),
+            ):
+                source = FRAMEWORK_ROOT / "templates" / "project-docs" / file_name
+                (docs / file_name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+
+            schema = load_project_schema(FRAMEWORK_ROOT)
+            for role_id in ("project_brief", "architecture_overview", "backlog"):
+                resolved = resolve_target_role(target, role_id, schema)
+                self.assertIsNotNone(resolved)
+                self.assertEqual(resolved, target / schema["roles"][role_id]["default_path"])
+
+    def test_resolve_target_role_uses_manifest_alternate_path_for_collision(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            docs = target / "docs"
+            docs.mkdir()
+            original = docs / "project-brief.md"
+            original.write_text(
+                "# Project context\n\nThis is an arbitrary user document that should not be overwritten.\n",
+                encoding="utf-8",
+            )
+            approved = docs / "approved"
+            approved.mkdir()
+            canonical = approved / "project-brief.md"
+            canonical.write_text(
+                (FRAMEWORK_ROOT / "templates" / "project-docs" / "project-brief.md").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            manifest = target / "docs" / "method" / "project-manifest.md"
+            manifest.parent.mkdir(parents=True, exist_ok=True)
+            manifest.write_text(
+                "# Project Documentation Manifest\n\n"
+                "## Role-to-path mappings\n\n"
+                "- Project brief: `docs/approved/project-brief.md`\n",
+                encoding="utf-8",
+            )
+
+            resolved = resolve_target_role(target, "project_brief", load_project_schema(FRAMEWORK_ROOT))
+            self.assertEqual(resolved, canonical)
+            self.assertTrue(original.exists())
+            self.assertTrue(canonical.is_file())
 
     def test_task_uses_standalone_rules_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

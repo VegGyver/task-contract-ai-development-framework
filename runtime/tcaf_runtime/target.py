@@ -28,6 +28,19 @@ def _is_archive(path: Path) -> bool:
     return any(name.endswith(suffix) for suffix in ARCHIVE_SUFFIXES)
 
 
+def _document_matches_role_schema(text: str, role: dict[str, Any]) -> bool:
+    required_headings = role.get("required_headings", [])
+    if not required_headings:
+        return True
+    positions: list[int] = []
+    for heading in required_headings:
+        match = re.search(rf"(?m)^{re.escape(heading)}\s*$", text)
+        if not match:
+            return False
+        positions.append(match.start())
+    return positions == sorted(positions)
+
+
 def _overlaps_framework(path: Path, framework_root: Path) -> bool:
     resolved = path.resolve()
     root = framework_root.resolve()
@@ -153,4 +166,10 @@ def resolve_target_role(
     root = target_root.resolve()
     if candidate != root and root not in candidate.parents:
         raise TcafError(f"Target role path escapes the target: {relative}")
-    return candidate if candidate.is_file() else None
+    if not candidate.is_file():
+        return None
+    try:
+        text = candidate.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
+    return candidate if _document_matches_role_schema(text, role) else None

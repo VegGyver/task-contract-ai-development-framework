@@ -1,0 +1,66 @@
+TCAF 0.4.0 — implementation plan
+
+Goal
+Make TCAF usable directly by a new user without requiring prior knowledge of TCAF canonical file formats.
+
+Core principle
+User input is evidence. TCAF canonical project files are the normalized internal representation.
+
+Milestone 1 — Canonical normalization
+040-01 Bootstrap normalization
+- Arbitrary input files/directories are source material, not automatically canonical role documents.
+- Reuse an existing file as a canonical role only if it already conforms to that role schema.
+- Otherwise generate canonical files from the canonical templates.
+- Preserve source material unchanged.
+- Generated output must be capable of passing `tcaf validate --target`.
+
+040-02 Adoption normalization
+- Apply the same schema-compatibility rule to existing projects.
+- Existing non-canonical docs remain source evidence.
+- Generate the minimum normalized canonical role files needed.
+- Preserve project history and code.
+- Ensure the adoption bundle exposes every template it may generate.
+
+040-03 Validator-authoritative workflow
+- Agents must never claim validation success unless the runtime validator was actually run and its result is known.
+- Otherwise report VALIDATION PENDING and exact developer command.
+- Align agent output wording with DEVELOPER_RUN policy.
+
+Milestone 2 — Planning workflow
+040-04 Add `tcaf plan`
+- Accept feature/spec/analysis/backlog input.
+- Inspect architecture, stack, current project state and dependencies.
+- Decompose only as required by the actual architecture.
+- Produce a reviewable dependency-aware task plan.
+- Do not impose frontend/backend/shared decomposition when it does not fit the project.
+- Persist only after developer approval.
+
+Milestone 3 — Synchronization workflow
+040-05 Add `tcaf sync`
+- Re-read current repository/project state after developer/manual changes or new specifications.
+- Detect affected planned tasks.
+- Propose impact updates to canonical project state/backlog.
+- Never overwrite developer changes automatically.
+- Apply updates only after developer approval.
+
+Milestone 4 — UX/documentation/tests
+040-06 CLI guidance
+- Make bootstrap vs adopt vs task vs plan vs sync easy to understand.
+- Every command reports current phase and exact next action.
+
+040-07 Black-box acceptance tests
+- Greenfield arbitrary-doc bootstrap.
+- Existing-project adopt.
+- Feature planning.
+- Developer modification + sync.
+- Task Contract generation.
+- Ensure no expert chat preprocessing is required.
+
+040-08 Documentation + release
+- Quick-start decision table.
+- Input documentation guidelines that do not require canonical formatting.
+- Task Contract generation documentation.
+- Release notes and 0.4.0 version bump.
+
+Release gate
+Reality Error must be bootstrapped from its existing arbitrary docs and pass validation without manual file reshaping. TCAF must then generate the first task contract from the approved project state.
