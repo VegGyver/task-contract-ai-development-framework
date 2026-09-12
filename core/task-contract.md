@@ -2,18 +2,43 @@
 
 The task contract defines permission. The execution profile defines order.
 
-## Minimum contract
+## Developer task view
+
+The contract first explains the task to the developer in concise operational
+terms. Include only evidence-supported fields when applicable:
 
 ```txt
 Task ID:
+Title:
 Type:
+Origin:
 Goal:
+Expected behavior:
+Concrete changes:
+Implementation surface:
+Relevant components:
+Data models / schemas / DTOs / configuration:
+Dependencies / libraries:
+Test expectations:
+Acceptance criteria:
+Expected developer verification:
+Open decisions:
+```
+
+## AI execution constraints
+
+These fields authorize and constrain execution separately from the developer
+description:
+
+```txt
 Inspect:
 Modify:
 Allowed:
 Forbidden:
 Check mode:
 Checks:
+Scope boundaries:
+Stop conditions:
 Stop:
 ```
 
@@ -23,6 +48,7 @@ Optional:
 Profile:
 Source of truth:
 Origin:
+Supporting evidence:
 Expected behavior:
 Acceptance criteria:
 Open decisions:
@@ -61,3 +87,33 @@ State: WAITING FOR APPROVAL
 ```
 
 Do not regenerate unaffected contract content. Replace the contract or create a new task when the primary goal changes.
+
+## Failed-check remediation
+
+When a required check fails, keep the failure visible and report the observed
+error. Distinguish confirmed from probable cause, then propose a concrete
+remediation only when evidence supports one. Identify the files,
+configuration or dependencies it would change and classify it as either an
+in-scope mechanical correction or a change requiring explicit developer
+approval/contract amendment. Never expand scope silently. After an approved
+remediation, rerun the failed check and any checks whose validity may have
+been affected, then report the final result. If the cause is uncertain,
+request developer input rather than inventing a fix. A failed required
+aggregate check remains a failure until resolved.
+
+## Canonical task status and lifecycle evidence
+
+Use one stable task `Status` value: `Proposed`, `Approved`, `In progress`,
+`Completed`, or `Blocked`. `Completed` is a value, not a generated sentence.
+Keep lifecycle evidence separate:
+
+```txt
+Implementation: not started | in progress | completed
+Review: not requested | approved
+Verification: not run | pending | passed | failed
+Commit: committed | not recorded
+```
+
+Do not infer review approval, executed verification, or a commit from `Status`.
+Record `Commit: committed` and `Verification: passed` only with actual
+evidence, and record `Review: approved` only after explicit developer approval.

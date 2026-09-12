@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any
 
 
@@ -43,6 +44,48 @@ def format_run_markdown(envelope: dict[str, Any]) -> str:
                     resource["content"],
                     "<!-- TCAF INPUT END -->",
                 ]
+            )
+
+    if envelope.get("operation") == "task":
+        lines.extend(["", "## Contract provenance", ""])
+        target_roles = {
+            module["role"]: module
+            for module in envelope["instruction_modules"]
+            if module["source"] == "target"
+        }
+        canonical_roles = {
+            "project_brief",
+            "architecture_overview",
+            "backlog",
+            "project_rules",
+            "ai_workflow",
+            "capability_baseline",
+            "task_naming",
+        }
+        target_path = Path(target["locator"])
+        source_paths = [
+            relative
+            for relative in (
+                "docs/PROJECT_CONTEXT.md",
+                "docs/PROJECT_PLAN.md",
+            )
+            if (target_path / relative).is_file()
+        ]
+        if (target_path / "docs" / "architecture").is_dir():
+            source_paths.append("docs/architecture/")
+
+        if "backlog" in target_roles:
+            lines.append("Origin: Canonical backlog / canonical task state")
+        else:
+            lines.append("Origin: preserved/external/direct-request fallback evidence")
+        if canonical_roles.intersection(target_roles):
+            lines.append("Source of truth: canonical TCAF project documents")
+        else:
+            lines.append("Source of truth: available fallback/project evidence")
+        if source_paths:
+            lines.append(
+                "Supporting evidence: preserved/free-form source documents "
+                f"({', '.join(source_paths)})"
             )
 
     lines.extend(["", "## Instruction surface", ""])

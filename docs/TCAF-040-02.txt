@@ -1,0 +1,200 @@
+# TCAF 0.4.0 — Task 040-02
+
+## Goal
+
+Fix existing-project adoption normalization so `tcaf adopt` can ingest arbitrary existing project documentation and code without incorrectly treating non-canonical files as already-valid TCAF project-role documents.
+
+The adoption workflow must preserve the existing project, distinguish source evidence from canonical TCAF state, generate only the canonical documentation actually required, and produce a validator-compatible adopted project.
+
+## Current defect
+
+TCAF 0.3.3 adoption can map arbitrary existing project documents directly to canonical roles such as:
+
+- `project_brief`
+- `architecture_overview`
+- `backlog`
+- `ai_workflow`
+
+even when those files do not satisfy the canonical role schema.
+
+This caused:
+- invalid `project-manifest.md` role mappings;
+- validator failures on required headings;
+- adoption-generated method documents that were not always aligned with canonical templates;
+- false confidence that adoption had completed successfully.
+
+040-01 corrected bootstrap normalization and established the rule:
+
+> User/project input is source evidence. Canonical TCAF project documents are the normalized internal representation.
+
+040-02 must apply the same rule to `adopt`.
+
+## Required behavior
+
+1. Treat existing project documentation as source evidence by default.
+
+2. Reuse an existing file directly as a canonical role only when:
+   - it is explicitly selected for that role;
+   - it is schema-compatible with that role;
+   - reuse does not create conflicting project-state sources.
+
+3. If an existing document is not schema-compatible:
+   - preserve it unchanged;
+   - use it as evidence;
+   - generate the canonical role document from the official canonical template;
+   - derive only supported content from project evidence;
+   - keep missing or unclear information explicit;
+   - do not invent decisions, capabilities, conventions, or status.
+
+4. Adoption must continue to inspect existing implementation evidence:
+   - documentation;
+   - package/config files;
+   - representative source paths;
+   - CI/tooling/config paths;
+   - task/backlog evidence;
+   - repository-local rules.
+
+5. Existing application code, project history, task history, and working documentation must not be rewritten merely to satisfy TCAF formatting.
+
+6. The standard adoption candidate set must remain minimal.
+   Do not generate duplicate or parallel sources unnecessarily.
+
+7. Canonical template availability:
+   - Every project document that the adoption agent may generate must have its official template available in the Run Envelope instruction surface.
+   - Do not instruct the agent to generate “from canonical templates” unless those templates are actually exposed.
+
+8. Manifest behavior:
+   - Use `docs/method/project-manifest.md` only for genuine approved path deviations.
+   - Never map a non-canonical arbitrary document directly to a canonical role.
+   - If a canonical default path is occupied by non-canonical existing content, preserve that file and use an approved alternate canonical path recorded in the manifest.
+   - Use only the parser-supported manifest syntax.
+
+9. Validation authority:
+   - The adoption agent must not claim `Validation: PASS` unless runtime target validation was actually executed and its result is available.
+   - Under `DEVELOPER_RUN`, report:
+     `VALIDATION PENDING`
+     and the exact command:
+     `tcaf validate --target .`
+
+10. Preserve the developer review gate:
+    - first pass remains inspection-only;
+    - propose mappings and generated file set;
+    - no project changes before approval;
+    - after approval, create only the approved normalized canonical documents.
+
+## Important distinction from bootstrap
+
+`bootstrap` is for a project that is still at idea/analysis/scaffold/roadmap stage.
+
+`adopt` is for an existing software project with real implementation, configuration, history, or established working patterns.
+
+Do not collapse the two operations into one.
+
+Adoption must preserve and learn from existing project evidence rather than treating the project as a greenfield initialization.
+
+## Areas to inspect before editing
+
+At minimum inspect:
+
+- `agent-bundles/existing-project-adoption/AGENT.md`
+- `agent-bundles/existing-project-adoption/START.md`
+- `agent-bundles/existing-project-adoption/OUTPUT-SCHEMA.md`
+- `agent-bundles/existing-project-adoption/MANIFEST.md`
+- `core/project-documentation-schema.md`
+- `core/target-binding.md`
+- `registry/project-schema.json`
+- `templates/project-docs/`
+- `runtime/tcaf_runtime/target.py`
+- `runtime/tcaf_runtime/validator.py`
+- existing adoption/runtime tests
+- README/guides only where required for behavioral consistency
+
+Also inspect the 040-01 bootstrap changes and reuse the same normalization principles where appropriate rather than implementing a parallel incompatible mechanism.
+
+## Tests required
+
+Add regression coverage for at least these cases:
+
+### A. Existing project with arbitrary documentation
+
+Existing repo contains:
+- free-form project overview;
+- free-form architecture docs;
+- free-form backlog/roadmap;
+- existing application/config files.
+
+Expected:
+- arbitrary docs are preserved as evidence;
+- they are not directly resolved as canonical roles unless schema-compatible;
+- required canonical TCAF docs are generated from official templates;
+- established project facts are derived from evidence;
+- planned capabilities are not classified as implemented;
+- target validation passes after approved generation.
+
+### B. Existing valid canonical document
+
+If a project already contains a schema-compatible canonical role document:
+- reuse it;
+- do not create a duplicate.
+
+### C. Default-path collision
+
+If a non-canonical existing project file occupies a canonical default path:
+- preserve the existing file;
+- generate the canonical role at an approved alternate path;
+- record the mapping using valid project-manifest syntax;
+- validation passes.
+
+### D. Template exposure
+
+Verify that every canonical document the adoption agent can generate has its official template available in the adoption Run Envelope.
+
+### E. Inspection-only review gate
+
+Verify the first adoption run:
+- changes no project files;
+- returns the proposed normalized mapping/file set;
+- waits for developer approval.
+
+## Acceptance criteria
+
+040-02 is complete only when all of the following are true:
+
+1. Adoption no longer maps arbitrary non-canonical docs directly to canonical roles.
+2. Existing source docs and code remain unchanged unless an explicit separate task authorizes modifications.
+3. Canonical generated docs conform to `registry/project-schema.json`.
+4. Manifest mappings are parser-compatible.
+5. Existing schema-compatible canonical docs are reused.
+6. Default-path collisions preserve original user/project content.
+7. Adoption retains existing-project inspection behavior and capability classification.
+8. Developer review gate remains intact.
+9. Runtime tests pass.
+10. Framework validation passes.
+11. A black-box adoption fixture can reach:
+    `tcaf validate --target .`
+    -> `PASS`
+    without manual reshaping of project documentation.
+
+## Non-goals
+
+Do not implement in this task:
+- `tcaf plan`;
+- `tcaf sync`;
+- Task Contract redesign;
+- backlog status propagation;
+- feature decomposition changes;
+- CLI UX redesign beyond wording strictly required by adoption normalization;
+- unrelated refactors.
+
+## Final response
+
+Report:
+
+1. files modified;
+2. behavioral changes;
+3. tests added/changed;
+4. template/manifest changes;
+5. validation/test commands run and results;
+6. any unresolved design question that blocks 040-03.
+
+Do not proceed to 040-03.

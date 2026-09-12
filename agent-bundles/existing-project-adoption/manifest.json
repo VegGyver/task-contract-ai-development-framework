@@ -9,7 +9,15 @@
     "../../runtime/standalone-rules-compact.md",
     "../../core/project-documentation-schema.md",
     "../../guides/architecture-capability-baseline.md",
-    "../../guides/change-management-and-history.md"
+    "../../guides/change-management-and-history.md",
+    "../../templates/project-docs/project-brief.md",
+    "../../templates/project-docs/architecture-overview.md",
+    "../../templates/project-docs/backlog.md",
+    "../../templates/project-docs/project-rules.md",
+    "../../templates/project-docs/ai-workflow.md",
+    "../../templates/project-docs/capability-baseline.md",
+    "../../templates/project-docs/task-naming.md",
+    "../../templates/project-docs/project-manifest.md"
   ],
   "target": {
     "required": true,
@@ -18,12 +26,7 @@
   },
   "target_modules": [],
   "optional_modules": {
-    "max_selected": 1,
-    "selectors": {
-      "project-rules-template": "../../templates/project-docs/project-rules.md",
-      "capability-baseline-template": "../../templates/project-docs/capability-baseline.md",
-      "task-naming-template": "../../templates/project-docs/task-naming.md",
-      "project-manifest-template": "../../templates/project-docs/project-manifest.md"
-    }
+    "max_selected": 0,
+    "selectors": {}
   }
 }

@@ -19,9 +19,44 @@ Do not load the full framework.
 - existing task ID/naming convention, when available
 - developer constraints
 
+## Project state source hierarchy
+
+When canonical TCAF project documents are available and schema-compatible, use
+them as the primary project state. Resolve task identity, status, dependencies
+and intent from the canonical `backlog` first; resolve project context and
+current architecture from the canonical `project_brief`,
+`architecture_overview`, `project_rules`, `ai_workflow`,
+`capability_baseline`, and `task_naming` documents.
+
+Preserved free-form project documents are supporting evidence only. Consult
+them when canonical documents reference detail that is not fully represented,
+or when a canonical role is missing or unusable. Label that material as
+supporting evidence or fallback, and never let it silently override canonical
+project state. Missing supporting evidence must not block contract generation.
+
+Do not identify arbitrary source documents as the primary source of truth when
+the corresponding canonical role exists. In the rendered contract, explicitly
+separate provenance fields and fill them from the evidence actually used:
+
+- `Origin: <actual task origin>`: use `Canonical backlog / canonical task
+  state` only when the canonical backlog contains the task; otherwise name the
+  preserved, external or direct-request fallback source.
+- `Source of truth: <actual project-state source>`: use `canonical TCAF
+  project documents` only when usable canonical project state exists; otherwise
+  name the fallback/project evidence used.
+- `Supporting evidence: <actual supporting evidence>`: include this field only
+  when preserved/free-form or other supporting evidence was available and
+  used. Do not emit a placeholder claiming evidence that was not used.
+
+Historical provenance may mention preserved filenames, but they must not appear
+as the authoritative task origin when a canonical backlog exists.
+
 ## Process
 
-1. Identify the request origin and classify one primary task type.
+1. Identify the request origin and classify one primary task type. Set the
+   provenance fields conditionally from the canonical and fallback evidence;
+   never claim canonical backlog authority or canonical project state when it
+   was not available and used.
 2. Identify the smallest useful step.
 3. Reuse the project task ID or naming convention.
 4. Define the exact inspect and modify surfaces.
@@ -48,25 +83,74 @@ Do not add examples, explanations or optional fields unless useful.
 Do not generate several executable steps as one contract.
 If decomposition is required, output a short proposed step list and stop.
 
+## Contract presentation
+
+Render the contract in two clearly labelled parts. First provide the concise
+developer-facing task view: task ID/title/type, goal, expected outcome,
+concrete changes, implementation surface, relevant components, supported
+models/schemas/configuration, dependencies, tests, acceptance criteria,
+expected developer verification and open decisions. Then provide the AI
+execution constraints: inspect, modify, allowed, forbidden, scope boundaries,
+checks, stop conditions and review gates. Include only details supported by
+canonical project/task evidence; do not invent implementation structure.
+
+## Failed-check remediation
+
+When a required check fails, keep the failure visible. Identify the check and
+observed error, distinguish confirmed cause from probable cause, and propose a
+concrete remediation only when supported by evidence. State the files,
+configuration or dependencies that would change and classify the remediation
+as either an in-scope mechanical correction or a change requiring developer
+approval/contract amendment. Do not silently expand scope. After approval,
+rerun the failed check and any affected checks and report the final result. If
+the cause is uncertain, report that uncertainty and request developer input;
+never invent a fix or claim aggregate `PASS` after a required check failed.
+
+## Canonical status and lifecycle evidence
+
+Use stable `Status` values: `Proposed`, `Approved`, `In progress`, `Completed`,
+or `Blocked`. Keep `Implementation`, `Review`, `Verification`, and `Commit` as
+separate lifecycle evidence fields. Do not turn `Completed` into a prose
+sentence or infer lifecycle events from it. Record verification and commit
+only from executed/evidenced results, and record review approval only after
+explicit developer approval.
+
 ## Output — ready
 
 ```txt
 READY — Task Contract generated.
 Next action: review and explicitly approve the contract.
 
+## Developer task view
+
 Task ID:
+Title:
 Type:
-Origin:
+Origin: <actual task origin>
+Source of truth: <actual project-state source>
+Supporting evidence: <only when actually available and used>
 Goal:
-Expected behavior:
+Expected outcome / behavior:
+Concrete changes:
+Implementation surface:
+Relevant components:
+Data models / schemas / DTOs / configuration:
+Dependencies / libraries:
+Test expectations:
+Acceptance criteria:
+Expected developer verification:
+Open decisions:
+
+## AI execution constraints
+
 Inspect:
 Modify:
 Allowed:
 Forbidden:
-Acceptance criteria:
+Scope boundaries:
+Stop conditions:
 Check mode: DEVELOPER_RUN
 Checks:
-Open decisions:
 Stop:
 ```
 

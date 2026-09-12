@@ -6,21 +6,53 @@
 READY — Task Contract generated.
 Next action:
 
+## Developer task view
+
 Task ID:
+Title:
 Type:
-Origin:
+Origin: <actual task origin>
+Source of truth: <actual project-state source>
+Supporting evidence: <only when actually available and used>
 Goal:
 Expected behavior:
+Concrete changes:
+Implementation surface:
+Relevant components:
+Data models / schemas / DTOs / configuration:
+Dependencies / libraries:
+Test expectations:
+Acceptance criteria:
+Expected developer verification:
+Open decisions:
+
+## AI execution constraints
+
 Inspect:
 Modify:
 Allowed:
 Forbidden:
-Acceptance criteria:
+Scope boundaries:
+Stop conditions:
 Check mode:
 Checks:
-Open decisions:
 Stop:
 ```
+
+Provenance values are conditional: use canonical values only when the
+corresponding canonical evidence was used; otherwise name the actual fallback.
+Include Supporting evidence only when it was available and used.
+
+Required-check failures must retain the failed check and observed error,
+separate confirmed from probable cause, state proposed remediation and its
+impact surface, classify approval/amendment needs, rerun affected checks after
+approval, and report the final result. Do not claim aggregate `PASS` while a
+required check remains failed.
+
+Use stable task `Status` values (`Proposed`, `Approved`, `In progress`,
+`Completed`, `Blocked`) and separate `Implementation`, `Review`,
+`Verification`, and `Commit` lifecycle evidence. Do not infer lifecycle events
+from `Status`.
 
 Optional fields may be omitted when they add no useful information.
 

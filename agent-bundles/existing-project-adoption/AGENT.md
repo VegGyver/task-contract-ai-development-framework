@@ -30,7 +30,8 @@ No application behavior changes
 3. Use read-only listing or search to inspect relevant target docs, configs, shallow structure and task-relevant dot-prefixed config paths.
 4. Confirm an expected path exists before reading it. Record a confirmed missing path as a finding; do not probe absence through repeated failed reads.
 5. Inspect representative working source paths for task-relevant local standards.
-6. Map existing files to canonical document roles.
+6. Compare explicit candidate files with the machine schema for their proposed
+   canonical role. Treat all other documentation as source evidence.
 7. Report capabilities, observed standards, naming, gaps and conflicts.
 8. Propose the smallest necessary file set.
 9. Wait for approval.
@@ -39,7 +40,23 @@ No application behavior changes
 ## Existing-project rules
 
 - Canonical document roles are required; canonical filenames are preferred, not mandatory.
+- Existing documentation is source evidence by default. A file may be reused
+  as a canonical role only when it was explicitly selected for that role, it
+  satisfies the complete role schema, and reuse does not create a conflicting
+  project-state source.
+- When a source document is not schema-compatible, preserve it byte-for-byte,
+  derive only supported facts from it, and generate the canonical role from
+  the official template. Keep missing or unclear information explicit; never
+  invent decisions, capabilities, conventions or status.
+- Inspect implementation evidence separately from documentation, including
+  package/config files, representative source paths, CI/tooling/config paths,
+  task/backlog evidence and repository-local rules. Planned or documented
+  functionality is not an implemented capability.
 - Record approved path mappings in `docs/method/project-manifest.md` instead of creating unnecessary aliases.
+- If a non-canonical file occupies a canonical default path, preserve it and
+  use an approved alternate path for the generated canonical document. Record
+  only that canonical role-to-path mapping using the parser-supported
+  manifest syntax; a manifest must not map arbitrary source evidence to a role.
 - Do not create parallel sources for backlog status or project state.
 - Completed task title, description, scope, acceptance criteria, original dependencies and implementation notes are immutable.
 - Task status is operational data and may be changed only by a separate approved `DOCS_STATUS_UPDATE` task after evidence is verified.
@@ -47,8 +64,16 @@ No application behavior changes
 - If path visibility, hidden files, workspace scope or evidence is incomplete, use `Unclear`.
 - Use existing tracker/task naming.
 - `docs/method/project-rules.md` is the tool-agnostic canonical rules source; tool files such as `.clinerules` are compact adapters.
-- The standard adoption candidate set is limited to missing core method documents: `project-rules.md`, `capability-baseline.md`, `task-naming.md`, plus `project-manifest.md` when path deviations exist.
+- The standard adoption candidate set is the minimum missing or
+  non-conformant canonical role set required for a valid adopted project:
+  `project-brief.md`, `architecture-overview.md`, `backlog.md`,
+  `project-rules.md`, `ai-workflow.md`, `capability-baseline.md`, and
+  `task-naming.md`. Include `project-manifest.md` only when a genuine approved
+  path deviation exists. Do not propose roles already satisfied by
+  schema-compatible canonical documents.
 - Do not invent templates or extra documentation “for completeness”.
+- Generate canonical project documents only from the official templates exposed
+  in the adoption Run Envelope instruction surface.
 - Generated project rules must explicitly preserve working code, reuse existing functions/validations/patterns, forbid implicit restructuring, and keep developer verification mandatory.
 - Planned or documented functionality is not an available capability.
 - Extract local standards only from target evidence. Distinguish `Established`, `Localized`, `Conflicting`, and `Unclear`.
@@ -57,4 +82,10 @@ No application behavior changes
 - Preserve conflicting patterns as findings. Standardization requires a separate approved task.
 - Keep task ID/title separate from framework task type; do not invent follow-up naming conventions.
 
-Stop before any project file change in inspect-only mode.
+Validation reporting is evidence-based. Do not claim `Validation: PASS` unless
+`tcaf validate --target .` was actually executed and passed. Under
+`DEVELOPER_RUN`, report exactly `VALIDATION PENDING` and the command
+`tcaf validate --target .`.
+
+Stop before any project file change in inspect-only mode. After approval,
+create only the approved normalized canonical documents.
