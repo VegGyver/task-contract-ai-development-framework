@@ -1,0 +1,1317 @@
+{
+  "schema_version": "1.0",
+  "scope": "TCAF framework development governance",
+  "runtime_exposure": false,
+  "baseline": {
+    "source_release": "v0.3.3",
+    "working_line": "tcaf_04x",
+    "recovered_baseline_commit": "ec1f25e1f167f6eadbcf02e03de452d95534ad68",
+    "governing_rule": "NEW BEHAVIOR = EXISTING VERIFIED BEHAVIOR + EXPLICIT REQUESTED DELTA"
+  },
+  "operations": [
+    "RUN",
+    "BOOT",
+    "ADOPT",
+    "PLAN",
+    "CONTRACT",
+    "EXEC",
+    "VERIFY",
+    "SYNC"
+  ],
+  "applicability_groups": {
+    "ALL": [
+      "RUN",
+      "BOOT",
+      "ADOPT",
+      "PLAN",
+      "CONTRACT",
+      "EXEC",
+      "VERIFY",
+      "SYNC"
+    ],
+    "WORK": [
+      "BOOT",
+      "ADOPT",
+      "PLAN",
+      "CONTRACT",
+      "EXEC",
+      "VERIFY",
+      "SYNC"
+    ],
+    "ACTIVE": [
+      "ADOPT",
+      "PLAN",
+      "CONTRACT",
+      "EXEC",
+      "VERIFY",
+      "SYNC"
+    ],
+    "PLAN_FAMILY": [
+      "BOOT",
+      "ADOPT",
+      "PLAN",
+      "CONTRACT",
+      "VERIFY",
+      "SYNC"
+    ]
+  },
+  "enums": {
+    "classification": [
+      "core-unconditional",
+      "core-conditional",
+      "mode-specific"
+    ],
+    "change": [
+      "PRESERVE",
+      "EXTEND",
+      "CHANGE",
+      "NEW",
+      "DEPRECATE"
+    ],
+    "implementation_status": [
+      "NOT_IMPLEMENTED",
+      "PARTIAL",
+      "IMPLEMENTED",
+      "NA"
+    ],
+    "required_verification_level": [
+      "STRUCTURAL",
+      "BEHAVIORAL",
+      "BLACK_BOX"
+    ],
+    "verification_status": [
+      "UNVERIFIED",
+      "STATIC_VERIFIED",
+      "BEHAVIOR_VERIFIED",
+      "BLACK_BOX_VERIFIED"
+    ],
+    "health": [
+      "HEALTHY",
+      "REVIEW_REQUIRED",
+      "REGRESSION_DETECTED",
+      "BLOCKED"
+    ]
+  },
+  "principles": [
+    {
+      "id": "BP-01",
+      "name": "Engineering/developer authority",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Product intent, architecture, acceptance and final change authority remain human-owned; AI execution is delegated only inside approved boundaries.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every TCAF operation.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/task-contract.md",
+          "guides/review-and-verification.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-02",
+      "name": "Evidence and repository state before unsupported assumptions",
+      "classification": "core-conditional",
+      "origin": "v0.3.x, extended in 0.4",
+      "definition": "Use repository/project evidence rather than chat memory. Canonical documents govern approved intent/lifecycle state; implementation evidence governs observed implementation state.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Whenever TCAF reasons about project state, task state, capability state or implementation state.",
+      "change": "EXTEND",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "core/principles.md",
+          "agent-bundles/task-contract-generator/AGENT.md",
+          "agent-bundles/feature-planner/AGENT.md",
+          "runtime/tcaf_runtime/target.py"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      },
+      "notes": "0.4 distinguishes canonical approved state from observed implementation evidence; full drift reconciliation remains incomplete until sync."
+    },
+    {
+      "id": "BP-03",
+      "name": "Explicit bounded scope and change surface",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Every executable change has an explicit goal, authorized edit surface, allowed change types and stop conditions.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every operation that may authorize or describe change.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/task-contract.md",
+          "templates/task-contracts/task-contract.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-04",
+      "name": "Explicit permission",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Permission is explicit; an unapproved file or change type is not implicitly authorized.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Whenever TCAF defines or executes an authorized change surface.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/task-contract.md",
+          "templates/task-contracts/task-contract.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-05",
+      "name": "Minimum-first instructions and prompts",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.2+ / v0.3.x",
+      "definition": "Use the shortest safe instruction set that preserves all applicable behavior; add detail only when evidence shows it is needed.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every runtime composition and model-facing instruction surface.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/module-loading-guide.md",
+          "agent-bundles/task-contract-generator/AGENT.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-06",
+      "name": "Selective context loading",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Inspect and load only target evidence and framework guidance relevant to the current operation.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every runtime composition and target inspection step.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/module-loading-guide.md",
+          "runtime/tcaf_runtime/loader.py",
+          "core/run-protocol.md"
+        ]
+      },
+      "verification": {
+        "required": "STRUCTURAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/universal-run-protocol.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-07",
+      "name": "Preservation-first",
+      "classification": "core-conditional",
+      "origin": "historical / v0.2+ / v0.3.x",
+      "definition": "Compatible working behavior, local patterns, developer edits and project evidence are preserved unless an approved change explicitly targets them.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever existing project material, behavior or developer work may be affected.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "templates/project-docs/project-rules.md",
+          "agent-bundles/existing-project-adoption/AGENT.md",
+          "core/task-lifecycle.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/existing-project-adoption.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-08",
+      "name": "Existing capabilities only",
+      "classification": "core-conditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Libraries, scripts, tools, architecture, infrastructure and capabilities are available only when verified or explicitly approved.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever planning or execution depends on a project capability.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "templates/project-docs/capability-baseline.md",
+          "agent-bundles/task-contract-generator/AGENT.md",
+          "guides/architecture-capability-baseline.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-09",
+      "name": "Reuse before adding",
+      "classification": "core-conditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Reuse compatible existing functions, guards, validations, utilities and local patterns before introducing new equivalents.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever implementation or planning proposes functionality already partially represented in the project.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "templates/project-docs/project-rules.md",
+          "guides/architecture-capability-baseline.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": true,
+        "policy": "Project conventions may refine preferred reuse patterns, but preservation and avoidance of unnecessary duplication cannot be waived."
+      }
+    },
+    {
+      "id": "BP-10",
+      "name": "Implementation source hierarchy",
+      "classification": "core-conditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Existing projects follow verified compatible local patterns first; absent a usable local pattern, use compatible official documentation, then established ecosystem practice.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever TCAF must choose how a change should be implemented.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/implementation-source-hierarchy.md",
+          "templates/project-docs/project-rules.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-11",
+      "name": "No silent conflict",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Security, correctness, compatibility or authoritative-state conflicts are surfaced and resolved explicitly.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Whenever evidence or instructions conflict materially.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "templates/project-docs/project-rules.md",
+          "agent-bundles/feature-planner/AGENT.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-12",
+      "name": "Smallest useful coherent change",
+      "classification": "core-conditional",
+      "origin": "historical decomposition, extended in 0.4",
+      "definition": "A task or step is the smallest useful complete, bounded and verifiable change that leaves a valid project state; task count and line count are not optimization targets.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever TCAF creates, evaluates or decomposes a unit of work.",
+      "change": "EXTEND",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "core/principles.md",
+          "guides/task-decomposition.md",
+          "agent-bundles/task-contract-generator/AGENT.md",
+          "agent-bundles/feature-planner/AGENT.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": true,
+        "policy": "Approved project decomposition policy may refine task boundaries but may not waive boundedness, coherence, reviewability or verification."
+      }
+    },
+    {
+      "id": "BP-13",
+      "name": "Explicit refactor authorization",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Refactoring or restructuring requires explicit authorization and is not implied by feature, fix, planning or adoption work.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever proposed work could restructure working logic or architecture.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "templates/project-docs/project-rules.md",
+          "guides/task-decomposition.md",
+          "core/task-contract.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-14",
+      "name": "Evidence-based verification and claims",
+      "classification": "core-unconditional",
+      "origin": "historical, strengthened in 0.4",
+      "definition": "Validation and verification claims are evidence records, not predictions; PASS requires executed successful authoritative checks for the declared scope.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Whenever TCAF reports validation, verification or check results.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/validation-evidence.md",
+          "guides/review-and-verification.md",
+          "core/task-contract.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "BEHAVIOR_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-15",
+      "name": "AI self-check is not human acceptance",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x",
+      "definition": "Agent self-checks may provide evidence but cannot substitute for developer/team review and acceptance.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every operation with a review or acceptance gate.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "guides/review-and-verification.md",
+          "core/task-lifecycle.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-16",
+      "name": "Lifecycle states remain distinct",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.3.x, strengthened in 0.4",
+      "definition": "Implementation, verification, review/acceptance and commit are distinct lifecycle evidence and must not be inferred from one another.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever task or feature lifecycle state is read, written or reported.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/task-lifecycle.md",
+          "core/validation-evidence.md",
+          "templates/project-docs/backlog.md",
+          "core/task-contract.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "BEHAVIOR_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-17",
+      "name": "Live workspace state and concurrent-change preservation",
+      "classification": "core-conditional",
+      "origin": "v0.3.3",
+      "definition": "Re-read current relevant files after pauses or external edits and preserve compatible developer or concurrent changes.",
+      "applies": [
+        "ACTIVE"
+      ],
+      "trigger": "Whenever work resumes after a pause, external edit or concurrent change.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/task-lifecycle.md",
+          "templates/project-docs/project-rules.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-18",
+      "name": "Immutable executed history and historical identities",
+      "classification": "core-conditional",
+      "origin": "historical / v0.2+ / v0.3.x",
+      "definition": "Completed task scope and historical identifiers remain stable; later fixes, extensions or refactors are linked rather than retroactively rewriting history.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever existing completed work or historical task identifiers are encountered.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "guides/change-management-and-history.md",
+          "templates/project-docs/backlog.md",
+          "templates/project-docs/task-naming.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/existing-project-adoption.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-19",
+      "name": "Explicit active-task change classification",
+      "classification": "core-conditional",
+      "origin": "v0.3.3",
+      "definition": "Clarification, correction, local adaptation, amendment, separate request and blocker are distinct and produce different authorization behavior.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever an approved or active task receives a new request, correction or conflict.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/task-contract.md",
+          "guides/change-management-and-history.md",
+          "agent-bundles/task-contract-generator/AGENT.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-20",
+      "name": "Outcome-first operational interaction",
+      "classification": "core-unconditional",
+      "origin": "v0.3.3",
+      "definition": "Operational responses begin with outcome, completed action and next developer step; extra explanation is included only when useful.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every operational response.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/task-lifecycle.md",
+          "guides/review-and-verification.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-21",
+      "name": "Tool resilience",
+      "classification": "core-unconditional",
+      "origin": "historical / v0.2+ / v0.3.x",
+      "definition": "The workflow remains valid when an agent cannot directly run commands or edit files; permissions and evidence adapt to actual host capabilities.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every run regardless of adapter capabilities.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/principles.md",
+          "core/adapter-contract.md",
+          "guides/review-and-verification.md",
+          "registry/adapters.json"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/universal-run-protocol.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-22",
+      "name": "Deterministic runtime and module resolution",
+      "classification": "core-unconditional",
+      "origin": "v0.3.x Architecture A",
+      "definition": "Operations resolve through registered agents, machine-authoritative manifests, safe module paths, one target and one adapter.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every runtime run-envelope assembly.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/run-protocol.md",
+          "runtime/tcaf_runtime/loader.py",
+          "registry/agents.json"
+        ]
+      },
+      "verification": {
+        "required": "STRUCTURAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/universal-run-protocol.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-23",
+      "name": "Framework instructions and target evidence remain separate",
+      "classification": "core-unconditional",
+      "origin": "v0.3.x",
+      "definition": "Framework modules define procedure; target-project artifacts are evidence. Neither surface is silently reclassified as the other.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every run that combines framework instructions with a target.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/run-protocol.md",
+          "core/adapter-contract.md",
+          "agent-bundles/existing-project-adoption/AGENT.md",
+          "runtime/tcaf_runtime/loader.py"
+        ]
+      },
+      "verification": {
+        "required": "STRUCTURAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/universal-run-protocol.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-24",
+      "name": "Adapters change transport, not semantics",
+      "classification": "core-unconditional",
+      "origin": "v0.3.x",
+      "definition": "Adapters may change transport and available tool access only; they do not alter core rules, manifest behavior, permissions or output schema.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every run through any adapter.",
+      "change": "PRESERVE",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/adapter-contract.md",
+          "core/run-protocol.md",
+          "registry/adapters.json"
+        ]
+      },
+      "verification": {
+        "required": "STRUCTURAL",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/universal-run-protocol.md"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-25",
+      "name": "Team and multi-agent capable workflow",
+      "classification": "core-conditional",
+      "origin": "introduced v0.2.1, preserved in v0.3.x",
+      "definition": "Planning and execution support separate ownership, parallel contributors/agents and integration gates without assuming one executor or one architectural layer.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever work may have multiple owners, agents, workstreams or independently executable units.",
+      "change": "EXTEND",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "guides/team-and-multi-agent.md",
+          "agent-bundles/task-contract-generator/manifest.json",
+          "agent-bundles/feature-planner/AGENT.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      },
+      "notes": "Team semantics exist historically but are not propagated into the current feature-planning manifest; current composition can omit team guidance."
+    },
+    {
+      "id": "BP-26",
+      "name": "Organizational execution profile",
+      "classification": "core-conditional",
+      "origin": "0.4 recovered design",
+      "definition": "A project may declare single-developer, team, or multi-team. When unspecified, planning remains team-capable and must not invent serial technical dependencies.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever planning or execution organization is known or materially affects ownership and execution shape.",
+      "change": "NEW",
+      "implementation": {
+        "status": "NOT_IMPLEMENTED",
+        "surfaces": []
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "UNVERIFIED",
+        "evidence": []
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": true,
+        "policy": "The project may declare single-developer, team or multi-team; absence means team-capable default. The principle itself is not waivable."
+      },
+      "notes": "Record only in 040-GOV-01; implementation is intentionally deferred."
+    },
+    {
+      "id": "BP-27",
+      "name": "Feature is not Task",
+      "classification": "mode-specific",
+      "origin": "0.4 feature planning",
+      "definition": "A feature/outcome is a planning unit that may contain one or more tasks and uses a separate identity namespace by default.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever a requested outcome or feature is planned or related to task state.",
+      "change": "NEW",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/OUTPUT-SCHEMA.md",
+          "registry/agents.json"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      },
+      "notes": "Implemented in the feature-planner instruction surface; black-box semantic verification is still required."
+    },
+    {
+      "id": "BP-28",
+      "name": "Architecture-aware decomposition",
+      "classification": "core-conditional",
+      "origin": "historical decomposition, extended in 0.4 planning",
+      "definition": "Task boundaries derive from the actual architecture, responsibilities and coherent outcomes rather than hard-coded frontend/backend/shared layers.",
+      "applies": [
+        "PLAN_FAMILY"
+      ],
+      "trigger": "Whenever an operation creates, changes or evaluates task decomposition.",
+      "change": "EXTEND",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "guides/task-decomposition.md",
+          "agent-bundles/feature-planner/AGENT.md",
+          "docs/TCAF-0.4.0-PLAN.txt"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": true,
+        "policy": "Approved project planning/decomposition policy may refine decomposition heuristics but may not override non-waivable TCAF invariants."
+      }
+    },
+    {
+      "id": "BP-29",
+      "name": "Dependencies are semantic, not ordinal",
+      "classification": "core-conditional",
+      "origin": "0.4 feature planning",
+      "definition": "A dependency exists only for a real prerequisite, contract, capability, blocker or other semantic requirement; task number, roadmap order, phase order or one-person schedule do not create dependencies.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever dependencies, blockers or next-executable work are derived.",
+      "change": "NEW",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/OUTPUT-SCHEMA.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-30",
+      "name": "Dependency DAG and parallel-ready work",
+      "classification": "core-conditional",
+      "origin": "0.4 feature planning plus historical team semantics",
+      "definition": "Planning represents real prerequisite relationships as an acyclic graph and may expose multiple simultaneously executable tasks when no true dependency blocks them.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever work ordering, readiness or parallel execution is planned.",
+      "change": "EXTEND",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/OUTPUT-SCHEMA.md",
+          "guides/team-and-multi-agent.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-31",
+      "name": "Shared contracts are contextual decomposition signals",
+      "classification": "mode-specific",
+      "origin": "explicit 0.4 semantic change from historical team rule",
+      "definition": "A shared contract or interface becomes a dedicated task only when it is itself a coherent independently reviewable outcome or materially unlocks independent workstreams.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever a shared contract, schema, interface or boundary is considered during decomposition.",
+      "change": "CHANGE",
+      "implementation": {
+        "status": "NOT_IMPLEMENTED",
+        "surfaces": [
+          "guides/team-and-multi-agent.md",
+          "agent-bundles/feature-planner/AGENT.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "UNVERIFIED",
+        "evidence": []
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      },
+      "notes": "Current guides/team-and-multi-agent.md still contains the historical stronger rule requiring shared contracts/API boundaries to use a dedicated approved task. Do not modify that guide in 040-GOV-01."
+    },
+    {
+      "id": "BP-32",
+      "name": "Explicit convergence when integration work is real",
+      "classification": "core-conditional",
+      "origin": "historical team integration, extended in 0.4 planning",
+      "definition": "Convergence/integration is represented explicitly when independently produced work must genuinely be reconciled, integrated or jointly verified; no ceremonial convergence task is required otherwise.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever independent workstreams must be brought together or jointly validated.",
+      "change": "EXTEND",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "guides/team-and-multi-agent.md",
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/OUTPUT-SCHEMA.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/acceptance/TEST_LOG.md"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-33",
+      "name": "Feature member, prerequisite and platform capability are distinct",
+      "classification": "mode-specific",
+      "origin": "0.4 feature planning",
+      "definition": "Planning distinguishes feature-member work from external prerequisites, already available capabilities and cross-cutting/platform capabilities.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever feature planning classifies existing or missing work.",
+      "change": "NEW",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/OUTPUT-SCHEMA.md",
+          "docs/TCAF-040-04.txt"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      },
+      "notes": "Feature-planner implements feature member, external prerequisite and existing capability classification; generalized platform/cross-cutting capability handling still requires behavioral hardening."
+    },
+    {
+      "id": "BP-34",
+      "name": "Task verification is not feature acceptance",
+      "classification": "core-conditional",
+      "origin": "0.4 feature/task lifecycle refinement",
+      "definition": "A task may be verified or accepted while its parent feature remains incomplete; feature acceptance requires separate feature-level satisfaction.",
+      "applies": [
+        "WORK"
+      ],
+      "trigger": "Whenever task lifecycle evidence is interpreted in feature-level planning or acceptance.",
+      "change": "NEW",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "core/task-lifecycle.md",
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/OUTPUT-SCHEMA.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "UNVERIFIED",
+        "evidence": []
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-35",
+      "name": "Canonical intended state and actual implementation evidence are distinct",
+      "classification": "core-conditional",
+      "origin": "repository-first evolved in 0.4",
+      "definition": "Canonical state represents approved intent/lifecycle state; repository/configuration evidence represents observed implementation state. A mismatch is drift and must be surfaced rather than silently resolved.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Whenever canonical documentation and observed repository/configuration state may disagree.",
+      "change": "EXTEND",
+      "implementation": {
+        "status": "PARTIAL",
+        "surfaces": [
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/task-contract-generator/AGENT.md",
+          "runtime/tcaf_runtime/target.py",
+          "agent-bundles/existing-project-adoption/AGENT.md"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "STATIC_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      },
+      "notes": "Full drift reconciliation remains incomplete until the sync workflow is implemented."
+    },
+    {
+      "id": "BP-36",
+      "name": "Validator authority is bounded to its declared domain",
+      "classification": "core-unconditional",
+      "origin": "0.4 validator-authoritative workflow",
+      "definition": "The runtime validator is authoritative only for the canonical framework/project structure it validates; it does not prove product behavior, business correctness, task acceptance or feature completion.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Whenever validator output is used as evidence.",
+      "change": "NEW",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "core/validation-evidence.md",
+          "runtime/tcaf_runtime/validator.py",
+          "guides/review-and-verification.md"
+        ]
+      },
+      "verification": {
+        "required": "BEHAVIORAL",
+        "status": "BEHAVIOR_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py"
+        ]
+      },
+      "health": "HEALTHY",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      }
+    },
+    {
+      "id": "BP-37",
+      "name": "Applicable principles propagate across relevant operations",
+      "classification": "core-unconditional",
+      "origin": "0.4 recovered architectural gap",
+      "definition": "A principle applies because its semantic trigger is true, not because a particular specialist file happened to be loaded. Every relevant operation must preserve applicable principles while still using minimum necessary model context.",
+      "applies": [
+        "ALL"
+      ],
+      "trigger": "Every operation and stage during applicability resolution and model-context composition.",
+      "change": "NEW",
+      "implementation": {
+        "status": "NOT_IMPLEMENTED",
+        "surfaces": [
+          "runtime/tcaf_runtime/loader.py",
+          "agent-bundles/task-contract-generator/manifest.json",
+          "agent-bundles/feature-planner/manifest.json",
+          "agent-bundles/project-bootstrap/manifest.json"
+        ]
+      },
+      "verification": {
+        "required": "BLACK_BOX",
+        "status": "UNVERIFIED",
+        "evidence": []
+      },
+      "health": "REVIEW_REQUIRED",
+      "custom": {
+        "allowed": false,
+        "policy": "Not customizable."
+      },
+      "notes": "Current loader composes required modules plus explicitly selected optional selectors and does not yet resolve semantic principle applicability. Do not fix this in 040-GOV-01."
+    }
+  ],
+  "operational_requirements": {
+    "planning_decomposition_policy": {
+      "status": "PLANNED_0.4",
+      "default_mode": "standard",
+      "custom_mode": "custom",
+      "candidate_canonical_role": "planning_policy",
+      "candidate_default_path": "docs/method/planning-policy.md",
+      "semantics": [
+        "Absent custom policy: use TCAF standard architecture-aware decomposition.",
+        "Approved custom policy: the project/team may refine task grouping, ownership conventions, decomposition examples and organization.",
+        "Custom policy may not waive bounded scope, preservation-first, reviewability, meaningful verification, semantic dependency correctness, explicit refactor authorization or human acceptance."
+      ],
+      "non_waivable_principles": [
+        "BP-03",
+        "BP-07",
+        "BP-12",
+        "BP-13",
+        "BP-14",
+        "BP-15",
+        "BP-29"
+      ]
+    }
+  }
+}

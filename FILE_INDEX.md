@@ -40,4 +40,12 @@ Each canonical bundle has a machine-authoritative `manifest.json`. `MANIFEST.md`
 
 Active-task amendments and developer/concurrent edits are defined in `core/task-contract.md` and `guides/change-management-and-history.md`. Evidence-based validation and check reporting are defined in `core/validation-evidence.md`. Outcome labels and concise response order are defined in `core/task-lifecycle.md` and `guides/review-and-verification.md`.
 
+## Framework development governance
+
+- `governance/principles.json`
+- `governance/CHANGE-CONTROL.md`
+- `tests/governance/`
+
+Governance files control development of TCAF itself and are not ordinary runtime instruction modules.
+
 Legacy single-file agent profiles remain under `agents/` as unregistered references; the runner uses only registered canonical bundles.
