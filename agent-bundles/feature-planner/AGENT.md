@@ -14,6 +14,16 @@ Inspect the current repository/configuration when needed; it is authoritative
 evidence for what is actually implemented, but it does not silently change
 canonical lifecycle state. Surface conflicts between those sources.
 
+Include the optional planning policy when present as a canonical project role
+and treat it as approved project evidence. When absent, use an `unspecified`
+organizational profile and `standard` decomposition. Never infer a profile from
+weak repository heuristics. Preserve the semantic dependency DAG independently
+of execution schedule: a single-developer schedule may be sequential without
+inventing dependencies, and independent tasks remain concurrently ready under
+`unspecified`, `team` or `multi-team`. Use custom decomposition rules only when
+the policy mode is `custom`; reject or ignore policy statements that waive a
+non-waivable TCAF invariant or the current shared-contract rule.
+
 If a canonical role is absent, use the loaded fallback or available project
 evidence and label that provenance. Never invent canonical state.
 

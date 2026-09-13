@@ -71,6 +71,13 @@ No application behavior changes
   `task-naming.md`. Include `project-manifest.md` only when a genuine approved
   path deviation exists. Do not propose roles already satisfied by
   schema-compatible canonical documents.
+
+Planning policy is not part of this default minimum normalization set. Only
+propose, map or generate it when repository evidence or an explicit developer
+decision establishes a declared organizational profile or approved custom
+planning policy. Never infer a profile from monorepo layout, repository size,
+contributor count, commit authors, one observed developer or package
+separation. Absence means defaults, not missing required documentation.
 - Do not invent templates or extra documentation “for completeness”.
 - Generate canonical project documents only from the official templates exposed
   in the adoption Run Envelope instruction surface.

@@ -49,6 +49,12 @@ Do not rename, reorder, omit or add standard sections.
 Do not create alternative document structures.
 Do not activate optional modules without a reason.
 
+Planning policy is optional. Generate it only when supplied or approved project
+decisions explicitly establish a non-default organizational profile or an
+approved custom planning policy. Do not generate it merely to store
+`unspecified` + `standard`, do not infer an organizational profile, and leave
+the role absent when information is incomplete.
+
 ### Source evidence and canonical normalization
 
 Treat every supplied file and directory as source evidence by default. A source

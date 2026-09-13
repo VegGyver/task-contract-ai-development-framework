@@ -2,7 +2,7 @@
 
 This schema defines canonical document roles and templates for framework-managed projects.
 
-Machine schema version: `0.3.0` in `registry/project-schema.json`.
+Machine schema version: `0.4.0` in `registry/project-schema.json`.
 
 ## Standardization rule
 
@@ -21,6 +21,7 @@ docs/
     capability-baseline.md
     task-naming.md
     project-manifest.md
+    planning-policy.md (optional)
 ```
 
 For greenfield projects, use these paths unless the team explicitly chooses another convention or an approved external system is the sole operational source for a role.
@@ -32,6 +33,8 @@ For existing projects, canonical roles are required but existing paths may be ma
 Store approved role-to-path mappings in `docs/method/project-manifest.md`. Create this manifest when any canonical path deviation exists.
 
 Map an approved external role as `external:<source>`, for example `external:GitHub Issues`. When a role is external, do not create its default repository file or another parallel source. Only roles marked `allow_external_source` in the machine schema may use this mapping.
+
+`docs/method/planning-policy.md` is an optional canonical role. Its absence means an `unspecified` organizational profile and `standard` decomposition. Do not create it solely to store those defaults. Create or map it only when the project explicitly declares an organizational profile and/or approved planning policy. Never infer an organizational profile from repository size, monorepo structure, number of commits, current user or apparent contributor count. It is project evidence, not an optional specialist module.
 
 ## Optional modules
 

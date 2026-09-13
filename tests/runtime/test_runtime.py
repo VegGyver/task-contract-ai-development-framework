@@ -88,6 +88,150 @@ class RuntimeTests(unittest.TestCase):
         self.assertFalse(result["valid"])
         self.assertIn("manifest-module", {issue["code"] for issue in result["issues"]})
 
+    def test_optional_planning_policy_absence_is_valid(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertTrue(result["valid"], result["issues"])
+
+    def _add_planning_policy(self, target: Path) -> Path:
+        policy = target / "docs" / "method" / "planning-policy.md"
+        policy.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(FRAMEWORK_ROOT / "templates" / "project-docs" / "planning-policy.md", policy)
+        return policy
+
+    def test_valid_planning_policy_passes_target_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            self._add_planning_policy(target)
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertTrue(result["valid"], result["issues"])
+
+    def test_planning_policy_rejects_invalid_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            policy = self._add_planning_policy(target)
+            policy.write_text(policy.read_text(encoding="utf-8").replace("`unspecified`", "`unknown`", 1), encoding="utf-8")
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertFalse(result["valid"])
+        self.assertIn("planning-policy-profile", {issue["code"] for issue in result["issues"]})
+
+    def test_planning_policy_rejects_invalid_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            policy = self._add_planning_policy(target)
+            policy.write_text(policy.read_text(encoding="utf-8").replace("`standard`", "`unknown`", 1), encoding="utf-8")
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertFalse(result["valid"])
+        self.assertIn("planning-policy-mode", {issue["code"] for issue in result["issues"]})
+
+    def test_planning_policy_rejects_empty_custom_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            policy = self._add_planning_policy(target)
+            text = policy.read_text(encoding="utf-8").replace("Mode: `standard`", "Mode: `custom`")
+            policy.write_text(text, encoding="utf-8")
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertFalse(result["valid"])
+        self.assertIn("planning-policy-custom", {issue["code"] for issue in result["issues"]})
+
+    def test_planning_policy_rejects_template_boilerplate_without_placeholder(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            policy = self._add_planning_policy(target)
+            text = policy.read_text(encoding="utf-8").replace("Mode: `standard`", "Mode: `custom`").replace("None.\n\nWhen Mode", "\nWhen Mode")
+            policy.write_text(text, encoding="utf-8")
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertFalse(result["valid"])
+        self.assertIn("planning-policy-custom", {issue["code"] for issue in result["issues"]})
+
+    def test_planning_policy_custom_mode_accepts_genuine_policy(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            policy = self._add_planning_policy(target)
+            text = policy.read_text(encoding="utf-8").replace("Mode: `standard`", "Mode: `custom`").replace(
+                "None.\n\nWhen Mode",
+                "Group work by bounded capability and preserve evidence-backed ownership.\n\nWhen Mode",
+            )
+            policy.write_text(text, encoding="utf-8")
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertTrue(result["valid"], result["issues"])
+
+    def test_planning_policy_is_discovered_as_target_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            self._add_planning_policy(target)
+            envelopes = [
+                assemble_run(
+                    FRAMEWORK_ROOT,
+                    operation,
+                    direct_agent=False,
+                    raw_target=str(target),
+                    request="Plan one bounded behavior." if operation in {"task", "plan"} else None,
+                    raw_input=None,
+                    selectors=[],
+                    requested_adapter="generic-cli",
+                )
+                for operation in ("task", "plan")
+            ]
+        for envelope in envelopes:
+            self.assertTrue(
+                any(
+                    module["source"] == "target" and module["role"] == "planning_policy"
+                    for module in envelope["instruction_modules"]
+                )
+            )
+
+    def test_planning_policy_does_not_consume_optional_context_limit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            self._add_planning_policy(target)
+            for operation in ("task", "plan"):
+                envelope = assemble_run(
+                    FRAMEWORK_ROOT,
+                    operation,
+                    direct_agent=False,
+                    raw_target=str(target),
+                    request="Plan one bounded behavior.",
+                    raw_input=None,
+                    selectors=["decomposition"],
+                    requested_adapter="generic-cli",
+                )
+                self.assertIn(
+                    "optional:decomposition",
+                    [module["role"] for module in envelope["instruction_modules"]],
+                )
+
+    def test_absent_planning_policy_defaults_are_in_compact_instructions(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan one bounded behavior.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        instructions = "\n".join(module["content"] for module in envelope["instruction_modules"])
+        for phrase in ("unspecified", "team-capable", "DEPENDENCY GRAPH != EXECUTION SCHEDULE", "single-developer", "standard TCAF"):
+            self.assertIn(phrase, instructions)
+
+    def test_feature_planner_output_shape_includes_execution_profile_fields(self) -> None:
+        output = (FRAMEWORK_ROOT / "agent-bundles" / "feature-planner" / "OUTPUT-SCHEMA.md").read_text(encoding="utf-8")
+        for field in ("Organizational profile:", "Dependency graph:", "Parallel-ready work:", "Recommended execution schedule:", "Ownership / convergence:"):
+            self.assertIn(field, output)
+
     def test_each_public_operation_receives_cross_operation_baseline(self) -> None:
         for operation in ("bootstrap", "adopt", "task", "plan"):
             with self.subTest(operation=operation), tempfile.TemporaryDirectory() as temporary:
@@ -574,6 +718,7 @@ class RuntimeTests(unittest.TestCase):
             "ai-workflow.md",
             "capability-baseline.md",
             "task-naming.md",
+            "planning-policy.md",
             "project-manifest.md",
         }
         self.assertTrue(
@@ -758,7 +903,7 @@ class RuntimeTests(unittest.TestCase):
         )
         self.assertEqual(
             set(envelope["unresolved_optional_target_roles"]),
-            {"project_brief", "architecture_overview", "backlog", "ai_workflow"},
+            {"project_brief", "architecture_overview", "backlog", "ai_workflow", "planning_policy"},
         )
 
     def test_task_uses_canonical_project_state_before_preserved_source_evidence(self) -> None:
@@ -1018,6 +1163,9 @@ class RuntimeTests(unittest.TestCase):
             any(path.endswith("templates/project-docs/project-brief.md") for path in module_paths)
         )
         self.assertTrue(
+            any(path.endswith("templates/project-docs/planning-policy.md") for path in module_paths)
+        )
+        self.assertTrue(
             any(path.endswith("templates/project-docs/architecture-overview.md") for path in module_paths)
         )
         self.assertTrue(
@@ -1203,6 +1351,7 @@ class RuntimeTests(unittest.TestCase):
                 "task_naming",
                 "capability_baseline",
                 "ai_workflow",
+                "planning_policy",
             },
         )
 

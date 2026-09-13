@@ -13,3 +13,7 @@
 - [ ] Completed task history was not rewritten.
 - [ ] Optional modules have a documented activation reason.
 - [ ] Deviations are explicitly listed and approved.
+- [ ] Optional planning policy, when present, uses a valid organizational profile.
+- [ ] Optional planning policy uses `standard` or `custom` decomposition mode.
+- [ ] Custom planning mode contains an actual approved policy.
+- [ ] Absence of planning policy is valid and means `unspecified` + `standard`.

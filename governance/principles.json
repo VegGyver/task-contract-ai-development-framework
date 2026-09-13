@@ -899,7 +899,9 @@
         "surfaces": [
           "guides/team-and-multi-agent.md",
           "agent-bundles/task-contract-generator/manifest.json",
-          "agent-bundles/feature-planner/AGENT.md"
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/manifest.json",
+          "runtime/planning-rules-minimal.md"
         ]
       },
       "verification": {
@@ -914,7 +916,7 @@
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Team semantics exist historically but are not propagated into the current feature-planning manifest; current composition can omit team guidance."
+      "notes": "Compact team-capable planning semantics now propagate deterministically through the planning runtime baseline; detailed/specialist team guidance remains partial and optional. Semantic BLACK_BOX verification is still required."
     },
     {
       "id": "BP-26",
@@ -928,20 +930,33 @@
       "trigger": "Whenever planning or execution organization is known or materially affects ownership and execution shape.",
       "change": "NEW",
       "implementation": {
-        "status": "NOT_IMPLEMENTED",
-        "surfaces": []
+        "status": "IMPLEMENTED",
+        "surfaces": [
+          "registry/project-schema.json",
+          "templates/project-docs/planning-policy.md",
+          "runtime/planning-rules-minimal.md",
+          "runtime/tcaf_runtime/validator.py",
+          "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/feature-planner/manifest.json",
+          "agent-bundles/feature-planner/OUTPUT-SCHEMA.md",
+          "agent-bundles/task-contract-generator/AGENT.md",
+          "agent-bundles/task-contract-generator/manifest.json"
+        ]
       },
       "verification": {
         "required": "BLACK_BOX",
-        "status": "UNVERIFIED",
-        "evidence": []
+        "status": "BEHAVIOR_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/governance/test_principles_registry.py"
+        ]
       },
       "health": "REVIEW_REQUIRED",
       "custom": {
         "allowed": true,
-        "policy": "The project may declare single-developer, team or multi-team; absence means team-capable default. The principle itself is not waivable."
+        "policy": "Valid organizational profiles are unspecified, single-developer, team or multi-team. In the absence of an approved profile, planning resolves to the unspecified team-capable default. The principle itself is not waivable."
       },
-      "notes": "Record only in 040-GOV-01; implementation is intentionally deferred."
+      "notes": "Deterministic organizational-profile and planning-policy support is implemented, but semantic BLACK_BOX verification remains pending."
     },
     {
       "id": "BP-27",
@@ -992,6 +1007,7 @@
         "surfaces": [
           "guides/task-decomposition.md",
           "agent-bundles/feature-planner/AGENT.md",
+          "runtime/planning-rules-minimal.md",
           "docs/TCAF-0.4.0-PLAN.txt"
         ]
       },
@@ -1304,11 +1320,11 @@
   ],
   "operational_requirements": {
     "planning_decomposition_policy": {
-      "status": "PLANNED_0.4",
+      "status": "IMPLEMENTED",
       "default_mode": "standard",
       "custom_mode": "custom",
-      "candidate_canonical_role": "planning_policy",
-      "candidate_default_path": "docs/method/planning-policy.md",
+      "canonical_role": "planning_policy",
+      "default_path": "docs/method/planning-policy.md",
       "semantics": [
         "Absent custom policy: use TCAF standard architecture-aware decomposition.",
         "Approved custom policy: the project/team may refine task grouping, ownership conventions, decomposition examples and organization.",

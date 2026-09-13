@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.3.0",
+  "schema_version": "0.4.0",
   "roles": {
     "project_brief": {
       "label": "Project brief",
@@ -50,6 +50,13 @@
       "template": "templates/project-docs/task-naming.md",
       "required": true,
       "required_headings": ["# Task Naming", "## Existing convention", "## Rules"]
+    },
+    "planning_policy": {
+      "label": "Planning policy",
+      "default_path": "docs/method/planning-policy.md",
+      "template": "templates/project-docs/planning-policy.md",
+      "required": false,
+      "required_headings": ["# Planning Policy", "## Organizational execution profile", "## Decomposition mode", "## Custom decomposition policy", "## Ownership / execution conventions", "## Notes / approved constraints"]
     },
     "project_manifest": {
       "label": "Project manifest",

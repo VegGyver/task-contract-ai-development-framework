@@ -35,8 +35,11 @@ Only genuinely necessary, materially distinct work. Explain why it cannot fit
 an existing task. Proposed IDs are provisional until approval.
 
 ## Execution shape
+Organizational profile:
 Dependency graph:
-Justified parallel work:
+Parallel-ready work:
+Recommended execution schedule:
+Ownership / convergence:
 
 ## Next executable work
 Exact Task ID(s):

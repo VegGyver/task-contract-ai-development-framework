@@ -28,6 +28,14 @@ current architecture from the canonical `project_brief`,
 `architecture_overview`, `project_rules`, `ai_workflow`,
 `capability_baseline`, and `task_naming` documents.
 
+When available, include the canonical `planning_policy` role in this project
+state hierarchy. For decomposition or dependency reasoning, use its approved
+policy; absence means `unspecified` organization and standard decomposition.
+The profile may affect recommended scheduling or ownership presentation, never
+semantic dependencies. Custom policy cannot waive TCAF invariants; do not infer
+owners or teams. Surface the profile only when it materially affects
+decomposition, execution shape or ownership.
+
 Preserved free-form project documents are supporting evidence only. Consult
 them when canonical documents reference detail that is not fully represented,
 or when a canonical role is missing or unusable. Label that material as

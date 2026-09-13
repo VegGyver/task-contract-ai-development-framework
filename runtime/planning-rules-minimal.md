@@ -11,3 +11,9 @@ Apply these rules whenever TCAF creates, evaluates, decomposes or sequences unit
 - When parallel developers/agents or separate ownership are actually applicable, define ownership before work, preserve separate bounded edit surfaces, require dedicated approved work for shared contracts or API boundaries under the current team rule, and do not treat parallel completion as integration completion.
 - Integration of independently owned work requires an explicit gate for contract compatibility, conflicts, supported cross-boundary checks and combined review.
 - Keep tests with the behavior they validate; do not create a generic test task automatically.
+- Keep the semantic dependency graph separate from the execution schedule: `DEPENDENCY GRAPH != EXECUTION SCHEDULE`.
+- Organizational profile values are `unspecified`, `single-developer`, `team`, and `multi-team`. Without approved planning-policy evidence, use `unspecified` and standard TCAF architecture-aware decomposition.
+- `unspecified` remains team-capable: do not invent owners, but do not serialize independent work merely because organization is unknown.
+- `single-developer` may make the recommended execution schedule sequential but does not change task boundaries, dependencies or readiness.
+- `team` and `multi-team` may expose independent parallel-ready work and evidence-backed ownership or convergence; never invent owners or teams.
+- If an approved planning policy is present, obey its decomposition mode. `custom` may refine grouping, ownership conventions and examples only; it cannot waive TCAF invariants or current shared-boundary rules.

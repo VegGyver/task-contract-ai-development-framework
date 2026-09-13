@@ -114,6 +114,23 @@ class PrinciplesRegistryTests(unittest.TestCase):
             "NOT_IMPLEMENTED",
         )
 
+    def test_organizational_profile_and_planning_policy_are_recorded(self) -> None:
+        by_id = {item["id"]: item for item in self.registry["principles"]}
+        principle = by_id["BP-26"]
+        self.assertEqual(principle["change"], "NEW")
+        self.assertEqual(principle["implementation"]["status"], "IMPLEMENTED")
+        self.assertEqual(principle["verification"]["required"], "BLACK_BOX")
+        self.assertEqual(principle["verification"]["status"], "BEHAVIOR_VERIFIED")
+        self.assertEqual(principle["health"], "REVIEW_REQUIRED")
+        requirement = self.registry["operational_requirements"]["planning_decomposition_policy"]
+        self.assertEqual(requirement["status"], "IMPLEMENTED")
+        self.assertEqual(requirement["canonical_role"], "planning_policy")
+        self.assertEqual(requirement["default_path"], "docs/method/planning-policy.md")
+        self.assertNotIn("BP-38", {item["id"] for item in self.registry["principles"]})
+        self.assertEqual(by_id["BP-31"]["change"], "CHANGE")
+        self.assertEqual(by_id["BP-31"]["implementation"]["status"], "NOT_IMPLEMENTED")
+        self.assertTrue({"BP-03", "BP-07", "BP-12", "BP-13", "BP-14", "BP-15", "BP-29"}.issubset(requirement["non_waivable_principles"]))
+
     def test_principle_propagation_is_implemented_pending_black_box(self) -> None:
         by_id = {item["id"]: item for item in self.registry["principles"]}
         principle = by_id["BP-37"]
@@ -134,7 +151,7 @@ class PrinciplesRegistryTests(unittest.TestCase):
         self.assertEqual(requirement["default_mode"], "standard")
         self.assertEqual(requirement["custom_mode"], "custom")
         self.assertEqual(
-            requirement["candidate_canonical_role"],
+            requirement["canonical_role"],
             "planning_policy",
         )
         principle_ids = {item["id"] for item in self.registry["principles"]}

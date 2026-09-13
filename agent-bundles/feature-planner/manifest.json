@@ -23,7 +23,8 @@
     {"role": "project_rules", "when": "if-present", "fallback_module": "../../runtime/standalone-rules-compact.md"},
     {"role": "ai_workflow", "when": "if-present"},
     {"role": "capability_baseline", "when": "if-present"},
-    {"role": "task_naming", "when": "if-present"}
+    {"role": "task_naming", "when": "if-present"},
+    {"role": "planning_policy", "when": "if-present"}
   ],
   "optional_modules": {
     "max_selected": 1,

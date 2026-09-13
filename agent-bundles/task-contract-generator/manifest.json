@@ -45,6 +45,10 @@
     {
       "role": "ai_workflow",
       "when": "if-present"
+    },
+    {
+      "role": "planning_policy",
+      "when": "if-present"
     }
   ],
   "optional_modules": {

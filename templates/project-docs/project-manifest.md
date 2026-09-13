@@ -1,6 +1,6 @@
 # Project Documentation Manifest
 
-Schema version: `0.3.0`
+Schema version: `0.4.0`
 
 ## Role-to-path mappings
 

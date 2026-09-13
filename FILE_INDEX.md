@@ -36,6 +36,7 @@ Each canonical bundle has a machine-authoritative `manifest.json`. `MANIFEST.md`
 - `runtime/`: compact model-facing rules
 - `runtime/cross-operation-rules-minimal.md`: compact rules applicable across operations
 - `runtime/planning-rules-minimal.md`: compact planning applicability rules
+- `templates/project-docs/planning-policy.md`: optional canonical planning policy role
 - `templates/`: canonical project and task templates
 - `adapters/`: tool-specific notes
 - `examples/`: compact examples

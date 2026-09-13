@@ -513,6 +513,8 @@ def validate_target(framework_root: Path, target_root: Path) -> dict[str, Any]:
             )
         if role_id == "project_brief":
             _validate_open_decisions(text, path, issues)
+        if role_id == "planning_policy":
+            _validate_planning_policy(text, path, issues)
     return _result(issues)
 
 
@@ -548,6 +550,60 @@ def _validate_open_decisions(
         )
 
 
+def _validate_planning_policy(
+    text: str,
+    path: Path,
+    issues: list[Issue],
+) -> None:
+    profiles = {"unspecified", "single-developer", "team", "multi-team"}
+    modes = {"standard", "custom"}
+    profile_match = re.search(r"(?m)^Profile:\s*`([^`]+)`\s*$", text)
+    profile = profile_match.group(1) if profile_match else ""
+    if profile not in profiles:
+        _issue(
+            issues,
+            "error",
+            "planning-policy-profile",
+            f"Planning policy profile is invalid: {profile or '<missing>'}",
+            path,
+        )
+    mode_match = re.search(r"(?m)^Mode:\s*`([^`]+)`\s*$", text)
+    mode = mode_match.group(1) if mode_match else ""
+    if mode not in modes:
+        _issue(
+            issues,
+            "error",
+            "planning-policy-mode",
+            f"Planning policy decomposition mode is invalid: {mode or '<missing>'}",
+            path,
+        )
+    if mode == "custom":
+        section = re.search(
+            r"(?ms)^## Custom decomposition policy\s*$\n(.*?)(?=^##\s|\Z)",
+            text,
+        )
+        content = section.group(1).strip() if section else ""
+        for boilerplate in (
+            "When Mode is `custom`, replace `None.` with the approved project/team-specific rules for task grouping, decomposition heuristics, ownership conventions or examples.",
+            "A custom policy may refine planning organization but may not waive TCAF invariants or the currently active shared-contract/API-boundary rule.",
+        ):
+            content = content.replace(boilerplate, "").strip()
+        template_placeholder = (
+            content.casefold() == ""
+            or content.casefold() in {"none", "none.", "not defined", "to be decided"}
+            or (
+                content.casefold().startswith("none.")
+                and "when mode is `custom`" in content.casefold()
+            )
+        )
+        if template_placeholder:
+            _issue(
+                issues,
+                "error",
+                "planning-policy-custom",
+                "Custom planning mode requires substantive approved policy content",
+                path,
+            )
 def _result(issues: list[Issue]) -> dict[str, Any]:
     errors = sum(issue.level == "error" for issue in issues)
     warnings = sum(issue.level == "warning" for issue in issues)
