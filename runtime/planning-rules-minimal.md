@@ -13,6 +13,7 @@ Apply these rules whenever TCAF creates, evaluates, decomposes or sequences unit
 - Keep tests with the behavior they validate; do not create a generic test task automatically.
 - Keep the semantic dependency graph separate from the execution schedule: `DEPENDENCY GRAPH != EXECUTION SCHEDULE`.
 - Organizational profile values are `unspecified`, `single-developer`, `team`, and `multi-team`. Without approved planning-policy evidence, use `unspecified` and standard TCAF architecture-aware decomposition.
+- Under `standard` decomposition, all organizational profiles preserve the same architecture/outcome-driven task boundaries, semantic dependencies and readiness for the same evidence and requested outcome. Profiles may affect execution or organization presentation only; they do not merge or serialize independently executable work.
 - `unspecified` remains team-capable: do not invent owners, but do not serialize independent work merely because organization is unknown.
 - `single-developer` may make the recommended execution schedule sequential but does not change task boundaries, dependencies or readiness.
 - `team` and `multi-team` may expose independent parallel-ready work and evidence-backed ownership or convergence; never invent owners or teams.

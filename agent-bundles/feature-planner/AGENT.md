@@ -17,12 +17,22 @@ canonical lifecycle state. Surface conflicts between those sources.
 Include the optional planning policy when present as a canonical project role
 and treat it as approved project evidence. When absent, use an `unspecified`
 organizational profile and `standard` decomposition. Never infer a profile from
-weak repository heuristics. Preserve the semantic dependency DAG independently
-of execution schedule: a single-developer schedule may be sequential without
-inventing dependencies, and independent tasks remain concurrently ready under
-`unspecified`, `team` or `multi-team`. Use custom decomposition rules only when
-the policy mode is `custom`; reject or ignore policy statements that waive a
-non-waivable TCAF invariant or the current shared-contract rule.
+weak repository heuristics.
+
+Organizational profile and decomposition mode are separate concerns. Under
+`standard` decomposition, all profiles (`unspecified`, `single-developer`,
+`team` and `multi-team`) MUST preserve the same architecture/outcome-driven
+task boundaries, semantic dependencies and readiness for the same evidence and
+requested outcome. A profile may change only execution or organization
+presentation: a `single-developer` schedule may be sequential without
+inventing dependencies, while `unspecified`, `team` and `multi-team` must not
+serialize or merge independently executable work merely because of the active
+profile. Team profiles may expose parallel-ready work and evidence-backed
+ownership or convergence, but never invent owners or teams.
+
+Only an approved `custom` decomposition mode may refine standard grouping or
+decomposition behavior. Custom rules still cannot waive a non-waivable TCAF
+invariant or the current shared-contract rule.
 
 If a canonical role is absent, use the loaded fallback or available project
 evidence and label that provenance. Never invent canonical state.
@@ -62,10 +72,15 @@ evidence and label that provenance. Never invent canonical state.
 10. Stop at the developer review gate.
 
 Feature IDs and task IDs are separate namespaces by default. Preserve an
-explicit feature/epic ID or configured external identifier. Otherwise derive a
-feature ID from the task convention, for example `APP-001` becomes `APP-F001`.
-Never reuse a task ID as a feature ID unless the project explicitly requires a
-shared namespace.
+explicit feature/epic ID or approved external identifier. When the project
+defines an approved feature-ID convention, follow it. Otherwise derive the
+feature prefix from the existing task convention and allocate the feature
+sequence independently: use `<PREFIX>-F001` when no existing feature IDs are
+found, or the next available number based only on existing feature IDs. Never
+derive the feature suffix from a task ID, next task number, backlog position,
+roadmap position, request wording or feature-member count. Never reuse a task
+ID as a feature ID unless the project explicitly requires a shared namespace.
+Proposed feature IDs remain provisional until developer approval.
 
 ## Safety and approval gate
 

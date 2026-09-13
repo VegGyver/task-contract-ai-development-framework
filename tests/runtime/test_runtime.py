@@ -1445,6 +1445,58 @@ class RuntimeTests(unittest.TestCase):
         self.assertIn("already available support reused by the feature", instructions)
         self.assertIn("neither required prerequisite work nor feature-member work", instructions)
 
+    def test_feature_planner_separates_standard_decomposition_from_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan a feature.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        instructions = " ".join(
+            module["content"] for module in envelope["instruction_modules"]
+        ).split()
+        instructions = " ".join(instructions)
+        self.assertIn("Under `standard` decomposition, all profiles", instructions)
+        self.assertIn("same architecture/outcome-driven task boundaries", instructions)
+        self.assertIn("semantic dependencies and readiness", instructions)
+        self.assertIn("`single-developer` schedule may be sequential", instructions)
+        self.assertIn("`unspecified`, `team` and `multi-team` must not", instructions)
+        self.assertIn("must not serialize or merge independently executable work", instructions)
+        self.assertIn("Team profiles may expose parallel-ready work", instructions)
+        self.assertIn("ownership or convergence", instructions)
+        self.assertIn("never invent owners or teams", instructions)
+        self.assertIn("Only an approved `custom` decomposition mode", instructions)
+
+    def test_feature_planner_allocates_feature_ids_independently(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan a feature.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        instructions = " ".join(
+            module["content"] for module in envelope["instruction_modules"]
+        ).split()
+        instructions = " ".join(instructions)
+        self.assertIn("allocate the feature sequence independently", instructions)
+        self.assertIn("use `<PREFIX>-F001` when no existing feature IDs are found", instructions)
+        self.assertIn("next available number based only on existing feature IDs", instructions)
+        self.assertIn(
+            "Never derive the feature suffix from a task ID, next task number, backlog position, roadmap position, request wording or feature-member count",
+            instructions,
+        )
+        self.assertIn("Proposed feature IDs remain provisional until developer approval", instructions)
+
     def test_feature_planner_pending_validation_binds_target_locator(self) -> None:
         with tempfile.TemporaryDirectory() as temporary, tempfile.NamedTemporaryFile(
             mode="w", suffix="-envelope.md"
