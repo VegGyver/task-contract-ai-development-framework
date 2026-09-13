@@ -41,6 +41,10 @@ def load_project_schema(framework_root: Path) -> dict[str, Any]:
     return load_json(framework_root / "registry" / "project-schema.json")
 
 
+def load_applicability_registry(framework_root: Path) -> dict[str, Any]:
+    return load_json(framework_root / "registry" / "applicability.json")
+
+
 def safe_framework_path(framework_root: Path, base: Path, declared_path: str) -> Path:
     candidate = (base / declared_path).resolve()
     root = framework_root.resolve()

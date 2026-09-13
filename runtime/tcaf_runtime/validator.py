@@ -8,6 +8,7 @@ from typing import Any
 from .registry import (
     load_adapters_registry,
     load_agents_registry,
+    load_applicability_registry,
     load_json,
     load_project_schema,
     read_version,
@@ -49,6 +50,14 @@ def validate_framework(framework_root: Path) -> dict[str, Any]:
     except Exception as exc:
         _issue(issues, "error", "registry-load", str(exc))
         return _result(issues)
+
+    try:
+        applicability_registry = load_applicability_registry(root)
+        _validate_applicability_registry(
+            root, applicability_registry, agents_registry, issues
+        )
+    except Exception as exc:
+        _issue(issues, "error", "applicability-registry", str(exc))
 
     if agents_registry.get("framework_version") != version:
         _issue(
@@ -188,6 +197,112 @@ def validate_framework(framework_root: Path) -> dict[str, Any]:
             )
 
     return _result(issues)
+
+
+def _validate_applicability_registry(
+    root: Path,
+    registry: dict[str, Any],
+    agents_registry: dict[str, Any],
+    issues: list[Issue],
+) -> None:
+    modules = registry.get("modules")
+    if not isinstance(modules, dict):
+        _issue(issues, "error", "applicability-registry", "modules must be an object")
+        return
+
+    operations = agents_registry.get("operations", {})
+    registered_operations = set(operations) if isinstance(operations, dict) else set()
+    covered: set[str] = set()
+    paths_by_operation: dict[str, set[str]] = {}
+    for module_id, descriptor in modules.items():
+        if not isinstance(module_id, str) or not module_id.strip():
+            _issue(issues, "error", "applicability-module", "module ID must be non-empty")
+            continue
+        if not isinstance(descriptor, dict):
+            _issue(
+                issues,
+                "error",
+                "applicability-module",
+                f"{module_id}: module descriptor must be an object",
+            )
+            continue
+        declared_path = descriptor.get("path")
+        if not isinstance(declared_path, str) or not declared_path.strip():
+            _issue(
+                issues,
+                "error",
+                "applicability-module",
+                f"{module_id}: module path is required",
+            )
+        else:
+            candidate = (root / declared_path).resolve()
+            if candidate != root and root not in candidate.parents:
+                _issue(
+                    issues,
+                    "error",
+                    "applicability-module",
+                    f"{module_id}: module path escapes framework root: {declared_path}",
+                )
+            if root / "governance" == candidate or root / "governance" in candidate.parents:
+                _issue(
+                    issues,
+                    "error",
+                    "applicability-governance-leak",
+                    f"{module_id}: applicability modules may not reference governance",
+                )
+            elif not candidate.is_file():
+                _issue(
+                    issues,
+                    "error",
+                    "applicability-module",
+                    f"{module_id}: declared module is missing: {declared_path}",
+                )
+
+        declared_operations = descriptor.get("operations")
+        if not isinstance(declared_operations, list) or not declared_operations:
+            _issue(
+                issues,
+                "error",
+                "applicability-operation",
+                f"{module_id}: operations must be a non-empty list",
+            )
+            continue
+        for operation in declared_operations:
+            if not isinstance(operation, str) or not operation.strip():
+                _issue(
+                    issues,
+                    "error",
+                    "applicability-operation",
+                    f"{module_id}: operation must be a non-empty string",
+                )
+                continue
+            if operation not in registered_operations:
+                _issue(
+                    issues,
+                    "error",
+                    "applicability-operation",
+                    f"{module_id}: unknown operation {operation}",
+                )
+                continue
+            covered.add(operation)
+            if declared_path:
+                paths = paths_by_operation.setdefault(operation, set())
+                if declared_path in paths:
+                    _issue(
+                        issues,
+                        "error",
+                        "applicability-module",
+                        f"Duplicate applicability module path for {operation}: {declared_path}",
+                    )
+                paths.add(declared_path)
+
+    for operation in sorted(registered_operations - covered):
+        _issue(
+            issues,
+            "error",
+            "applicability-coverage",
+            f"Registered operation has no applicability module: {operation}",
+        )
 
 
 def _validate_manifest(

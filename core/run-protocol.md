@@ -8,6 +8,7 @@ Every operation follows the same sequence:
 operation
 → agent registry
 → deterministic manifest
+→ applicable runtime baseline
 → instruction modules
 → exactly one target
 → one adapter
@@ -34,6 +35,7 @@ tcaf run <agent-id> --target <target>
 - One run binds exactly one target.
 - The user selects an operation or public agent ID, never internal files.
 - `registry/agents.json` is the only operation-to-agent registry.
+- The runtime applicability registry resolves compact applicable modules independently of optional specialist selection.
 - `manifest.json` is the machine-authoritative module declaration for each agent.
 - The loader resolves only declared modules and fails on missing or escaping paths.
 - Target-project files are evidence; framework files are instructions.
@@ -49,12 +51,13 @@ The runner loads, in order:
 1. agent instructions;
 2. immutable start instruction;
 3. output schema;
-4. required framework modules;
-5. automatically discovered target modules;
-6. explicitly selected optional context by public selector;
-7. the selected adapter instructions.
+4. compact applicable runtime modules;
+5. required framework modules;
+6. automatically discovered target modules;
+7. explicitly selected optional specialist context by public selector;
+8. the selected adapter instructions.
 
-Optional selectors are chosen by the host adapter or agent workflow from the manifest. Users are not asked to locate files. Selection never exceeds the manifest limit.
+Applicability modules are resolved by the runtime applicability registry. They carry compact cross-operation or operation-specific invariants, and do not consume the optional specialist-module allowance. Optional selectors are chosen by the host adapter or agent workflow from the manifest. Users are not asked to locate files. Selection never exceeds the manifest limit. Specialist modules remain selective, and governance files are never ordinary runtime context.
 
 ## Input binding
 

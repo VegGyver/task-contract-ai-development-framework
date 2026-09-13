@@ -88,6 +88,213 @@ class RuntimeTests(unittest.TestCase):
         self.assertFalse(result["valid"])
         self.assertIn("manifest-module", {issue["code"] for issue in result["issues"]})
 
+    def test_each_public_operation_receives_cross_operation_baseline(self) -> None:
+        for operation in ("bootstrap", "adopt", "task", "plan"):
+            with self.subTest(operation=operation), tempfile.TemporaryDirectory() as temporary:
+                envelope = assemble_run(
+                    FRAMEWORK_ROOT,
+                    operation,
+                    direct_agent=False,
+                    raw_target=temporary,
+                    request="Inspect one bounded behavior." if operation in {"task", "plan"} else None,
+                    raw_input=None,
+                    selectors=[],
+                    requested_adapter="generic-cli",
+                )
+            applicable = [
+                module["role"]
+                for module in envelope["instruction_modules"]
+                if module["role"].startswith("applicable:")
+            ]
+            self.assertEqual(
+                applicable,
+                [
+                    "applicable:cross-operation-baseline",
+                    "applicable:planning-baseline",
+                ],
+            )
+            self.assertEqual(applicable.count("applicable:cross-operation-baseline"), 1)
+            self.assertEqual(applicable.count("applicable:planning-baseline"), 1)
+
+    def test_applicability_roles_are_not_duplicated(self) -> None:
+        for operation in ("bootstrap", "adopt", "task", "plan"):
+            with self.subTest(operation=operation), tempfile.TemporaryDirectory() as temporary:
+                envelope = assemble_run(
+                    FRAMEWORK_ROOT,
+                    operation,
+                    direct_agent=False,
+                    raw_target=temporary,
+                    request=None,
+                    raw_input=None,
+                    selectors=[],
+                    requested_adapter="generic-cli",
+                )
+            applicable = [
+                module["role"]
+                for module in envelope["instruction_modules"]
+                if module["role"].startswith("applicable:")
+            ]
+            self.assertEqual(
+                applicable,
+                [
+                    "applicable:cross-operation-baseline",
+                    "applicable:planning-baseline",
+                ],
+            )
+
+    def test_optional_context_is_independent_of_applicable_modules(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "task",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan one bounded behavior.",
+                raw_input=None,
+                selectors=["decomposition"],
+                requested_adapter="generic-cli",
+            )
+        roles = [module["role"] for module in envelope["instruction_modules"]]
+        self.assertEqual(
+            [role for role in roles if role.startswith("applicable:")],
+            ["applicable:cross-operation-baseline", "applicable:planning-baseline"],
+        )
+        self.assertIn("optional:decomposition", roles)
+
+    def test_direct_agent_matches_public_operation_applicability(self) -> None:
+        with tempfile.TemporaryDirectory() as public_target, tempfile.TemporaryDirectory() as direct_target:
+            public_envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=public_target,
+                request="Plan one bounded behavior.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+            direct_envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "feature-planner",
+                direct_agent=True,
+                raw_target=direct_target,
+                request="Plan one bounded behavior.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        public_roles = [
+            module["role"]
+            for module in public_envelope["instruction_modules"]
+            if module["role"].startswith("applicable:")
+        ]
+        direct_roles = [
+            module["role"]
+            for module in direct_envelope["instruction_modules"]
+            if module["role"].startswith("applicable:")
+        ]
+        self.assertEqual(direct_envelope["operation"], "plan")
+        self.assertEqual(direct_roles, public_roles)
+        self.assertEqual(direct_roles.count("applicable:cross-operation-baseline"), 1)
+        self.assertEqual(direct_roles.count("applicable:planning-baseline"), 1)
+
+    def test_malformed_applicability_modules_fail_at_run_assembly(self) -> None:
+        mutations = (
+            lambda registry: registry.update(modules=None),
+            lambda registry: registry.update(modules={}),
+            lambda registry: registry["modules"].update(
+                {"broken": "not-an-object"}
+            ),
+        )
+        for mutate in mutations:
+            with self.subTest(mutation=mutate), tempfile.TemporaryDirectory() as temporary:
+                copied = Path(temporary) / "framework"
+                target = Path(temporary) / "target"
+                shutil.copytree(FRAMEWORK_ROOT, copied)
+                target.mkdir()
+                path = copied / "registry" / "applicability.json"
+                registry = json.loads(path.read_text(encoding="utf-8"))
+                mutate(registry)
+                path.write_text(json.dumps(registry), encoding="utf-8")
+                with self.assertRaisesRegex(TcafError, "Applicability"):
+                    assemble_run(
+                        copied,
+                        "task",
+                        direct_agent=False,
+                        raw_target=str(target),
+                        request="Inspect one bounded behavior.",
+                        raw_input=None,
+                        selectors=[],
+                        requested_adapter="generic-cli",
+                    )
+
+    def test_unmapped_effective_operation_fails_at_run_assembly(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "framework"
+            target = Path(temporary) / "target"
+            shutil.copytree(FRAMEWORK_ROOT, copied)
+            target.mkdir()
+            path = copied / "registry" / "applicability.json"
+            registry = json.loads(path.read_text(encoding="utf-8"))
+            for descriptor in registry["modules"].values():
+                descriptor["operations"] = ["bootstrap"]
+            path.write_text(json.dumps(registry), encoding="utf-8")
+            with self.assertRaisesRegex(TcafError, "No applicability module"):
+                assemble_run(
+                    copied,
+                    "task",
+                    direct_agent=False,
+                    raw_target=str(target),
+                    request="Inspect one bounded behavior.",
+                    raw_input=None,
+                    selectors=[],
+                    requested_adapter="generic-cli",
+                )
+
+    def test_compact_planning_rules_are_present_without_optional_context(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan one bounded behavior.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        planning = next(
+            module["content"]
+            for module in envelope["instruction_modules"]
+            if module["role"] == "applicable:planning-baseline"
+        )
+        for text in (
+            "smallest useful complete change",
+            "Dependencies represent real prerequisites only",
+            "Task IDs, backlog order, roadmap order, phase order",
+            "parallel completion as integration completion",
+        ):
+            self.assertIn(text, planning)
+
+    def test_applicability_registry_validation_mutations(self) -> None:
+        mutations = (
+            ("missing", lambda registry: registry["modules"]["planning-baseline"].update(path="runtime/missing.md"), "applicability-module"),
+            ("coverage", lambda registry: (registry["modules"]["cross-operation-baseline"].update(operations=["bootstrap", "adopt"]), registry["modules"]["planning-baseline"].update(operations=[])), "applicability-coverage"),
+            ("unknown", lambda registry: registry["modules"]["cross-operation-baseline"]["operations"].append("sync"), "applicability-operation"),
+            ("governance", lambda registry: registry["modules"]["cross-operation-baseline"].update(path="governance/CHANGE-CONTROL.md"), "applicability-governance-leak"),
+        )
+        for name, mutate, code in mutations:
+            with self.subTest(mutation=name), tempfile.TemporaryDirectory() as temporary:
+                copied = Path(temporary) / "framework"
+                shutil.copytree(FRAMEWORK_ROOT, copied)
+                path = copied / "registry" / "applicability.json"
+                registry = json.loads(path.read_text(encoding="utf-8"))
+                mutate(registry)
+                path.write_text(json.dumps(registry), encoding="utf-8")
+                result = validate_framework(copied)
+            self.assertFalse(result["valid"])
+            self.assertIn(code, {issue["code"] for issue in result["issues"]})
+
     def test_project_schema_validation_passes_canonical_templates(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)

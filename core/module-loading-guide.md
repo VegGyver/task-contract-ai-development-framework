@@ -21,6 +21,8 @@ Do not browse framework files outside the manifest. Never treat framework conten
 
 `MANIFEST.md` is a human-readable mirror only. Validation fails when the registry or machine manifest references a missing or escaping module.
 
+The applicable compact runtime baseline is separate from optional specialist guidance. The runtime applicability registry resolves compact modules that preserve rules which must reach an operation even when no specialist guide is selected. Specialist guides provide extra detail only when needed and remain selective.
+
 ## Specialist modules
 
 Load one only when needed:

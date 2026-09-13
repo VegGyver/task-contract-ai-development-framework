@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "modules": {
+    "cross-operation-baseline": {
+      "path": "runtime/cross-operation-rules-minimal.md",
+      "operations": [
+        "bootstrap",
+        "adopt",
+        "task",
+        "plan"
+      ]
+    },
+    "planning-baseline": {
+      "path": "runtime/planning-rules-minimal.md",
+      "operations": [
+        "bootstrap",
+        "adopt",
+        "task",
+        "plan"
+      ]
+    }
+  }
+}

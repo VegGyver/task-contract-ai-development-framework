@@ -272,7 +272,8 @@
           "core/principles.md",
           "core/module-loading-guide.md",
           "runtime/tcaf_runtime/loader.py",
-          "core/run-protocol.md"
+          "core/run-protocol.md",
+          "registry/applicability.json"
         ]
       },
       "verification": {
@@ -795,7 +796,10 @@
         "surfaces": [
           "core/run-protocol.md",
           "runtime/tcaf_runtime/loader.py",
-          "registry/agents.json"
+          "runtime/tcaf_runtime/registry.py",
+          "runtime/tcaf_runtime/validator.py",
+          "registry/agents.json",
+          "registry/applicability.json"
         ]
       },
       "verification": {
@@ -1270,25 +1274,32 @@
       "trigger": "Every operation and stage during applicability resolution and model-context composition.",
       "change": "NEW",
       "implementation": {
-        "status": "NOT_IMPLEMENTED",
+        "status": "IMPLEMENTED",
         "surfaces": [
+          "registry/applicability.json",
+          "runtime/cross-operation-rules-minimal.md",
+          "runtime/planning-rules-minimal.md",
+          "runtime/tcaf_runtime/registry.py",
           "runtime/tcaf_runtime/loader.py",
-          "agent-bundles/task-contract-generator/manifest.json",
-          "agent-bundles/feature-planner/manifest.json",
-          "agent-bundles/project-bootstrap/manifest.json"
+          "runtime/tcaf_runtime/validator.py",
+          "core/run-protocol.md",
+          "core/module-loading-guide.md"
         ]
       },
       "verification": {
         "required": "BLACK_BOX",
-        "status": "UNVERIFIED",
-        "evidence": []
+        "status": "BEHAVIOR_VERIFIED",
+        "evidence": [
+          "tests/runtime/test_runtime.py",
+          "tests/governance/test_principles_registry.py"
+        ]
       },
       "health": "REVIEW_REQUIRED",
       "custom": {
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Current loader composes required modules plus explicitly selected optional selectors and does not yet resolve semantic principle applicability. Do not fix this in 040-GOV-01."
+      "notes": "Deterministic compact runtime propagation is implemented, but semantic BLACK_BOX verification is still pending."
     }
   ],
   "operational_requirements": {

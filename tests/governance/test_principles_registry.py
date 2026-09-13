@@ -114,15 +114,17 @@ class PrinciplesRegistryTests(unittest.TestCase):
             "NOT_IMPLEMENTED",
         )
 
-    def test_principle_propagation_is_recorded_not_implemented(self) -> None:
+    def test_principle_propagation_is_implemented_pending_black_box(self) -> None:
         by_id = {item["id"]: item for item in self.registry["principles"]}
         principle = by_id["BP-37"]
         self.assertEqual(principle["change"], "NEW")
         self.assertEqual(
             principle["implementation"]["status"],
-            "NOT_IMPLEMENTED",
+            "IMPLEMENTED",
         )
         self.assertEqual(principle["verification"]["required"], "BLACK_BOX")
+        self.assertEqual(principle["verification"]["status"], "BEHAVIOR_VERIFIED")
+        self.assertEqual(principle["health"], "REVIEW_REQUIRED")
         self.assertEqual(principle["applies"], ["ALL"])
 
     def test_custom_planning_policy_is_operational_requirement_not_bp38(self) -> None:
@@ -139,9 +141,9 @@ class PrinciplesRegistryTests(unittest.TestCase):
         self.assertNotIn("BP-38", principle_ids)
 
     def test_governance_is_not_loaded_by_agent_manifests(self) -> None:
-        for manifest_path in sorted(
-            (ROOT / "agent-bundles").glob("*/manifest.json")
-        ):
+        paths = sorted((ROOT / "agent-bundles").glob("*/manifest.json"))
+        paths.append(ROOT / "registry" / "applicability.json")
+        for manifest_path in paths:
             text = manifest_path.read_text(encoding="utf-8")
             with self.subTest(manifest=manifest_path):
                 self.assertNotIn("governance/", text)
