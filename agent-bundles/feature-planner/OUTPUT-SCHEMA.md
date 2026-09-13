@@ -59,7 +59,11 @@ Stop: at developer review and approval gate.
 
 ## Validation evidence
 Validation: PENDING / NOT RUN / FAILED / PASS — include exact command and
-authoritative result. Do not claim PASS without execution evidence.
+authoritative result. Do not claim PASS without execution evidence. For
+PENDING or NOT RUN, `<target>` in `tcaf validate --target <target>` must be the
+bound TCAF Run Envelope Target `locator`, never the envelope path,
+input-resource path, another inspected file, or the current working directory
+unless that exact path is the bound target.
 ```
 
 After explicit approval, a later approved workflow may persist the concise

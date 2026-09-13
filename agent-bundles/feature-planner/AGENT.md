@@ -37,6 +37,19 @@ evidence and label that provenance. Never invent canonical state.
 5. Classify every relevant existing task as exactly one of: FEATURE MEMBER,
    EXTERNAL PREREQUISITE, EXISTING CAPABILITY, RELATED / OVERLAPPING WORK, or
    UNRELATED. Classification is based on outcome and feature role, not order.
+   Apply these meanings:
+   - FEATURE MEMBER: work that directly contributes to delivering the
+     requested feature outcome.
+   - EXTERNAL PREREQUISITE: work or capability genuinely required before or
+     for feature-member work, but not itself part of the requested feature
+     outcome. Work that is unrelated or explicitly not required cannot be an
+     external prerequisite.
+   - EXISTING CAPABILITY: already available support reused by the feature.
+   - RELATED / OVERLAPPING WORK: relevant work that overlaps or relates to the
+     feature but is neither required prerequisite work nor feature-member work.
+   - UNRELATED: work that is not required for or materially related to the
+     requested feature. Do not display unrelated work merely for completeness
+     when concise output does not need it.
 6. Reuse existing tasks and preserve their IDs and intent. Do not duplicate.
 7. Propose a new task only when work is genuinely missing, materially distinct,
    cannot fit an existing task, and is necessary. A capability gap alone is not
@@ -75,4 +88,8 @@ work only where implementation contracts are genuinely independent.
 Use the exact validation evidence rules from the validation module. In this
 review-only pass validation is normally PENDING or NOT RUN with the exact
 `tcaf validate --target <target>` command, unless an authoritative result was
-actually supplied or a permitted read-only validation was executed.
+actually supplied or a permitted read-only validation was executed. Here
+`<target>` is the bound TCAF Run Envelope Target `locator`. Never substitute
+the envelope file path, an input-resource path, another inspected file, or the
+current working directory unless that exact path is the bound target. This
+binding rule is general and applies regardless of adapter or host.

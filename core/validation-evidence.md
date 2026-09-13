@@ -12,6 +12,13 @@ The runtime validator is authoritative for canonical TCAF project state:
 tcaf validate --target <target>
 ```
 
+Here `<target>` means the bound TCAF Run Envelope Target `locator`. Never
+substitute the envelope file path, an input-resource path, another inspected
+file, or the current working directory unless that exact path is the bound
+target. This binding rule is general and applies regardless of adapter or
+host. When validation is `PENDING` or `NOT RUN`, emit the exact command using
+that bound target locator.
+
 Report `Validation: PASS` only when that command (or the equivalent invocation
 through the current runtime working copy) was executed for the current target
 and returned success. If it was not executed, report `Validation: PENDING` or

@@ -1424,6 +1424,53 @@ class RuntimeTests(unittest.TestCase):
             module["content"] for module in payload["instruction_modules"]
         ))
 
+    def test_feature_planner_classification_definitions_are_explicit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan a feature.",
+                raw_input=None,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        instructions = "\n".join(
+            module["content"] for module in envelope["instruction_modules"]
+        )
+        self.assertIn("work that directly contributes to delivering the", instructions)
+        self.assertIn("genuinely required before or", instructions)
+        self.assertIn("Work that is unrelated or explicitly not required cannot be", instructions)
+        self.assertIn("already available support reused by the feature", instructions)
+        self.assertIn("neither required prerequisite work nor feature-member work", instructions)
+
+    def test_feature_planner_pending_validation_binds_target_locator(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary, tempfile.NamedTemporaryFile(
+            mode="w", suffix="-envelope.md"
+        ) as input_file:
+            envelope = assemble_run(
+                FRAMEWORK_ROOT,
+                "plan",
+                direct_agent=False,
+                raw_target=temporary,
+                request="Plan a feature.",
+                raw_input=input_file.name,
+                selectors=[],
+                requested_adapter="generic-cli",
+            )
+        instructions = "\n".join(
+            module["content"] for module in envelope["instruction_modules"]
+        )
+        self.assertIn("bound TCAF Run Envelope Target `locator`", instructions)
+        self.assertIn("Never substitute\nthe envelope file path", instructions)
+        self.assertIn("input-resource path", instructions)
+        self.assertIn(
+            "current working directory unless that exact path is the bound target",
+            instructions,
+        )
+        self.assertIn("When validation is `PENDING` or `NOT RUN`", instructions)
+
     def test_plan_loads_canonical_roles_and_rules_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)
