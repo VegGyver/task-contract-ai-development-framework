@@ -254,3 +254,125 @@ Scope limits: this sync semantic-model BLACK_BOX does not demonstrate
 generalized BP-02 or BP-35 behavior across every operation, BP-32 convergence,
 BP-37 cross-operation propagation, feature-level acceptance distinct from task
 verification, 040-06 CLI UX, 040-07 release-gate coverage, or 040-08.
+
+## TCAF 0.4 — 040-07 semantic-model BLACK_BOX acceptance
+
+**Result: COMPLETE / BLACK_BOX PASS.** These acceptance results are semantic
+BLACK_BOX evidence; deterministic/static tests provide regression coverage but
+do not alone prove this behavior. The clean runs used the applicable TCAF
+bundle and project evidence without expert chat preprocessing.
+
+### A — greenfield arbitrary-document bootstrap: PASS
+
+Fixture: `/tmp/reality-error-bootstrap-blackbox`. Input contained only the
+arbitrary source documents `docs/PROJECT_CONTEXT.md` and
+`docs/PROJECT_PLAN.md`; no canonical TCAF project documents were supplied.
+
+The clean bootstrap generated the seven minimum canonical project documents
+while preserving both original source documents byte-for-byte. It kept current
+and planned state separate, inferred no false capability availability,
+preserved proposed backlog state and open decisions, and respected the
+developer review gate. The following bound-target validation passed with 0
+errors and 0 warnings:
+
+```txt
+tcaf validate --target /tmp/reality-error-bootstrap-blackbox
+```
+
+### B — existing-project adopt: PASS
+
+Fixture: `/tmp/reality-error-adopt-blackbox`. The fixture contained real
+implementation/configuration and arbitrary source documentation, but no
+canonical TCAF project state before adoption.
+
+**B1 — inspect-only.** Repository capabilities were derived from
+implementation/configuration evidence and the arbitrary documents were treated
+as source evidence. The run inferred no false completion for RE-001 through
+RE-004, proposed exactly seven canonical candidate files, proposed no
+unnecessary project manifest or planning policy, preserved every original hash,
+and added no files during inspection.
+
+**B2 — explicitly approved bounded apply.** Exactly these seven canonical
+files were created:
+
+- `docs/project-brief.md`
+- `docs/architecture-overview.md`
+- `docs/backlog.md`
+- `docs/method/project-rules.md`
+- `docs/method/ai-workflow.md`
+- `docs/method/capability-baseline.md`
+- `docs/method/task-naming.md`
+
+All pre-existing files remained byte-for-byte unchanged and no unauthorized
+files were created. Canonical task lifecycle state was not inferred from
+repository implementation; current and planned capabilities remained separate;
+and the unresolved application-containerization decision remained unresolved.
+Bound-target validation passed with 0 errors and 0 warnings:
+
+```txt
+tcaf validate --target /tmp/reality-error-adopt-blackbox
+```
+
+### C — feature planning: PASS
+
+Feature planning is covered by the existing TCAF 0.4 planner semantic-model
+BLACK_BOX acceptance evidence recorded above. Its clean passing runs preserved
+task boundaries, semantic readiness and parallelism, avoided invented
+ownership, and used the planner bundle and project evidence without external
+corrective prompts.
+
+### D — developer modification and sync: PASS
+
+Developer modification and synchronization are covered by the existing 040-05
+project-sync semantic-model BLACK_BOX evidence recorded above. Its corrected
+approved bounded apply preserved developer Prisma evidence and completed
+history, kept RE-005 proposed/affected rather than falsely complete, retained
+unresolved findings outside the approved write set, and passed bound-target
+validation with 0 errors and 0 warnings.
+
+### E — Task Contract generation: final clean PASS, with historical failures preserved
+
+Target: `/tmp/reality-error-adopt-blackbox`; task: canonical backlog item
+RE-005.
+
+The initial BLACK_BOX run exposed unsupported lifecycle-evidence strengthening
+and an over-broad Modify surface. Narrow hardening was applied only to Task
+Contract generator instruction surfaces, with deterministic regression
+coverage. This observation is failure evidence, not a passing acceptance run.
+
+A clean retest confirmed the lifecycle and Modify corrections but exposed
+missing evidence state on a prerequisite check. A second narrow hardening then
+required every listed check, including prerequisites, to carry exactly one
+evidence state. This retest is likewise intermediate failure evidence, not a
+passing acceptance run.
+
+A further clean retest confirmed those corrections but exposed conditional
+Modify/check surfaces controlled by an unresolved execution-affecting decision.
+Final narrow hardening established that a READY executable contract may keep an
+Open decision only when execution remains fully bounded and identical regardless
+of that decision; otherwise existing BLOCKED / needed-decision behavior applies.
+This observation remains historical failure evidence, not a passing acceptance
+run.
+
+The final clean BLACK_BOX retest confirmed canonical task identity and
+provenance; preserved canonical lifecycle evidence exactly; produced one bounded
+RE-005 task; tied the Modify surface only to concrete changes; left no unresolved
+execution-affecting decision; marked every listed DEVELOPER_RUN check explicitly
+NOT RUN; introduced no product-domain scope creep; respected the developer
+approval gate; and left the target byte-for-byte and file-set unchanged.
+
+**Final result: Task Contract generation — BLACK_BOX PASS.**
+
+### F — no expert chat preprocessing: PASS
+
+No expert chat preprocessing was required across the clean greenfield bootstrap,
+existing-project adoption, and Task Contract generation runs.
+
+### 040-07 summary
+
+- Greenfield arbitrary-document bootstrap: **PASS**
+- Existing-project adopt: **PASS**
+- Feature planning: **PASS**
+- Developer modification + sync: **PASS**
+- Task Contract generation: **PASS**
+- No expert chat preprocessing: **PASS**

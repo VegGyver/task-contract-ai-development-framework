@@ -1325,6 +1325,55 @@ class RuntimeTests(unittest.TestCase):
         self.assertIn("lower-level diagnostics pass", content)
         self.assertIn("Do not infer review approval, executed verification, or a commit from `Status`", content)
 
+    def test_task_contract_generator_preserves_lifecycle_evidence_and_bounds_modify(self) -> None:
+        surfaces = (
+            "agent-bundles/task-contract-generator/AGENT.md",
+            "agent-bundles/task-contract-generator/OUTPUT-SCHEMA.md",
+        )
+        for path in surfaces:
+            with self.subTest(surface=path):
+                content = " ".join(
+                    (FRAMEWORK_ROOT / path).read_text(encoding="utf-8").split()
+                )
+                self.assertIn("When canonical task state exists", content)
+                self.assertIn("`not recorded`", content)
+                self.assertIn("stronger negative assertion", content)
+                self.assertIn("specific concrete change", content)
+                self.assertIn("speculative or precautionary", content)
+                self.assertIn("`Inspect` may be broader", content)
+
+    def test_task_contract_generator_reports_evidence_for_each_listed_check(self) -> None:
+        surfaces = (
+            "agent-bundles/task-contract-generator/AGENT.md",
+            "agent-bundles/task-contract-generator/OUTPUT-SCHEMA.md",
+        )
+        for path in surfaces:
+            with self.subTest(surface=path):
+                content = " ".join(
+                    (FRAMEWORK_ROOT / path).read_text(encoding="utf-8").split()
+                )
+                self.assertIn("Every command listed under `Checks` is a required check", content)
+                self.assertIn("including a prerequisite", content)
+                self.assertIn("exactly one evidence state", content)
+                self.assertIn("not-yet-executed check as `NOT RUN` or `PENDING`", content)
+
+    def test_task_contract_generator_blocks_execution_affecting_open_decisions(self) -> None:
+        surfaces = (
+            "agent-bundles/task-contract-generator/AGENT.md",
+            "agent-bundles/task-contract-generator/OUTPUT-SCHEMA.md",
+        )
+        for path in surfaces:
+            with self.subTest(surface=path):
+                content = " ".join(
+                    (FRAMEWORK_ROOT / path).read_text(encoding="utf-8").split()
+                )
+                self.assertIn("execution is fully bounded and identical regardless", content)
+                self.assertIn("`Concrete changes`, `Modify`, expected behavior, acceptance criteria, or required checks", content)
+                self.assertIn("existing BLOCKED output", content)
+                self.assertIn("needed decision", content)
+                self.assertIn("alternative or conditional paths in `Modify`", content)
+                self.assertIn("check that assumes one unresolved choice", content)
+
     def test_resolve_target_role_reuses_valid_canonical_documents(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)

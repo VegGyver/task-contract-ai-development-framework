@@ -116,16 +116,43 @@ never invent a fix or claim aggregate `PASS` after a required check failed.
 For every required check, report `PASS` only after execution and success,
 `FAILED` after execution and failure, and `NOT RUN` or `PENDING` when it was
 not executed. A failed aggregate command remains `FAILED` even when separate
-lower-level diagnostics pass.
+lower-level diagnostics pass. Every command listed under `Checks` is a
+required check, including a prerequisite, and must report exactly one evidence
+state. Under `DEVELOPER_RUN`, render each not-yet-executed check as `NOT RUN`
+or `PENDING`.
 
 ## Canonical status and lifecycle evidence
 
 Use stable `Status` values: `Proposed`, `Approved`, `In progress`, `Completed`,
 or `Blocked`. Keep `Implementation`, `Review`, `Verification`, and `Commit` as
 separate lifecycle evidence fields. Do not turn `Completed` into a prose
-sentence or infer lifecycle events from it. Record verification and commit
-only from executed/evidenced results, and record review approval only after
-explicit developer approval.
+sentence or infer lifecycle events from it. When canonical task state exists,
+preserve the meaning of its status and lifecycle evidence. Do not translate
+absent, unknown, unclear, `not recorded`, or equivalent evidence into a
+stronger negative assertion such as `not started`, `not requested`, `not run`,
+`not completed`, or `not approved`. Omit an optional lifecycle field when it
+adds no useful information; if rendered, preserve the authoritative meaning.
+Record verification and commit only from executed/evidenced results, and
+record review approval only after explicit developer approval.
+
+## Modify-surface boundedness
+
+List a path or path group in `Modify` only when project/task evidence supports
+a specific concrete change to it in this contract. Do not include speculative
+or precautionary paths merely because they may become useful during
+implementation. `Inspect` may be broader than `Modify`. If a later required
+change needs a path outside `Modify`, stop for the normal amendment/approval
+process.
+
+## Execution-affecting open decisions
+
+A READY executable contract may retain an open decision only when execution is
+fully bounded and identical regardless of that decision. If an unresolved
+decision determines `Concrete changes`, `Modify`, expected behavior,
+acceptance criteria, or required checks, do not generate READY. Do not express
+alternative or conditional paths in `Modify` or emit a check that assumes one
+unresolved choice; use the existing BLOCKED output and state the needed
+decision until the developer resolves it.
 
 ## Output — ready
 
