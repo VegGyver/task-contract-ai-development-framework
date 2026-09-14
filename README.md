@@ -9,6 +9,17 @@ explicit and human-owned.
 
 Version: **v0.4.0 · Public preview**
 
+## Positioning
+
+TCAF is a governance-first, spec-driven framework for controlled AI software
+delivery. It is positioned at the intersection of Spec-Driven Development,
+Harness Engineering, and Software Delivery Governance.
+
+Specifications and repository evidence define what should be built and the
+context in which work happens. TCAF extends that foundation across planning,
+bounded execution, synchronization, verification, and developer approval, so
+AI-assisted changes remain explicit, reviewable, and evidence-grounded.
+
 ## Why TCAF
 
 AI coding agents can accelerate development, but open-ended prompts can also
