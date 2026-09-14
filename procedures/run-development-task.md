@@ -8,8 +8,8 @@
    ```
 
 3. The runner discovers project rules, task naming and capability baseline through approved role mappings or canonical paths.
-4. The agent inspects only pertinent context and returns the shortest safe Task Contract.
-5. Review goal, expected behavior, edit surface, exclusions, acceptance criteria and checks; approve explicitly.
+4. The agent inspects only pertinent context and returns the shortest safe Task Contract. A Task Contract is the explicit authorization boundary for one piece of work: it records the goal and expected outcome, concrete change surface, relevant files or components, allowed and forbidden change types, checks, stop conditions, and any relevant open decisions.
+5. Review the contract and approve explicitly. If implementation later needs to change behavior, expand the approved surface, add a dependency, or otherwise exceed the boundary, the tool stops for a visible amendment or a new decision.
 6. The adapter supplies compact rules and the approved contract to the coding tool.
 7. The tool re-reads current relevant files, preserves existing and developer changes, edits only the allowed surface and stops.
 8. During implementation:

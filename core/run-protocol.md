@@ -24,10 +24,11 @@ tcaf bootstrap --target <target> [--request <text> | --input <path>]
 tcaf adopt --target <target>
 tcaf task --target <target> --request <bounded request>
 tcaf plan --target <target> --request <feature or outcome>
+tcaf sync --target <target> [--request <text> | --input <path>]
 tcaf run <agent-id> --target <target>
 ```
 
-`bootstrap`, `adopt`, `task`, and `plan` are stable operation names. Future agents use the same `run` protocol.
+`bootstrap`, `adopt`, `task`, `plan`, and `sync` are stable operation names. Future agents use the same `run` protocol.
 
 ## Invariants
 

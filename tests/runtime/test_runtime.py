@@ -1920,9 +1920,9 @@ class RuntimeTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(version.returncode, 0, version.stderr)
-            self.assertEqual(version.stdout.strip(), "0.3.3")
+            self.assertEqual(version.stdout.strip(), "0.4.0")
             active = json.loads((home / "active.json").read_text(encoding="utf-8"))
-            self.assertEqual(active["version"], "0.3.3")
+            self.assertEqual(active["version"], "0.4.0")
 
 
 if __name__ == "__main__":

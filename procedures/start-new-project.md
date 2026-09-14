@@ -7,7 +7,11 @@
    tcaf bootstrap --target <project-path> [--request <idea-or-first-task> | --input <analysis-or-roadmap>]
    ```
 
-   Input may be a complete analysis, a product idea, an initialized target, a first task or a partial roadmap.
+   Input may be a complete analysis, a product idea, an initialized target, a
+   first task, a partial roadmap, or ordinary project documentation. You do not
+   need to reshape existing notes, specifications, plans, or architecture
+   documents into TCAF format first. They are preserved as source evidence;
+   bootstrap proposes separate canonical project state when it is needed.
 
 3. The runner resolves the bootstrap agent, complete manifest, target and adapter.
 4. The agent separates current state, desired state, confirmed decisions, proposals and open decisions.

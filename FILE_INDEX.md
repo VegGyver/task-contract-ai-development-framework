@@ -7,7 +7,9 @@
 - `core/run-protocol.md`
 - `procedures/start-new-project.md`
 - `procedures/adopt-existing-project.md`
+- `procedures/plan-feature.md`
 - `procedures/run-development-task.md`
+- `procedures/sync-project-state.md`
 
 ## Operational runtime
 
@@ -26,6 +28,7 @@
 - `agent-bundles/existing-project-adoption/`
 - `agent-bundles/task-contract-generator/`
 - `agent-bundles/feature-planner/`
+- `agent-bundles/project-sync/`
 
 Each canonical bundle has a machine-authoritative `manifest.json`. `MANIFEST.md` is its human-readable mirror.
 

@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.4.0 — Evidence-grounded AI development workflows
+
+- Enabled bootstrap from ordinary project documentation while preserving the
+  supplied material as source evidence and deriving canonical project state
+  only when needed.
+- Added adoption for implemented projects that preserves existing code, history,
+  and working documentation while proposing the minimum normalized project
+  state.
+- Added feature planning that turns a requested outcome into a reviewable,
+  dependency-aware implementation proposal without implementing code.
+- Added bounded Task Contract generation for a specific unit of work, with
+  visible developer review and amendment decisions when work must exceed its
+  approved boundary.
+- Added project sync for manual, external, and out-of-run changes; it re-reads
+  evidence, identifies affected planned work, and requires bounded approval
+  before reconciliation writes.
+- Clarified the CLI workflow for bootstrap, adopt, plan, task, and sync, and
+  documented that canonical project state is repository-grounded rather than
+  dependent on chat memory.
+- Confirmed through semantic BLACK_BOX acceptance that covered workflows can
+  use ordinary project material without expert manual preprocessing.
+
 ## v0.3.3 — Task evolution and outcome-first workflow
 
 - Allowed greenfield bootstrap from complete or partial input without requiring a complete repository backlog.

@@ -4,7 +4,7 @@ These are concise reference flows. Each edit still requires a bounded task contr
 
 ## Greenfield
 
-Complete or partial input → current/planned/open classification → minimum project docs → declared task source → first approved Task Contract.
+Complete or partial input → current/planned/open classification → minimum project docs → declared task source → first approved Task Contract. Use `bootstrap`; ordinary documents are preserved source evidence, not a required canonical input format.
 
 A repository backlog is optional. When generated from an initial analysis it remains a proposal until review; later direct tasks may coexist with it.
 
@@ -30,4 +30,12 @@ Inspect source of truth → update only permitted fields/section → diff review
 
 ## Framework adoption
 
-Capability baseline → project naming/rules → additive project docs → validate with one small real task. Do not modify application behavior in the same adoption task.
+Capability baseline → project naming/rules → additive project docs → validate with one small real task. Use `adopt`; preserve code, history, and ordinary documentation as source evidence. Do not modify application behavior in the same adoption task.
+
+## Feature planning
+
+Feature or outcome → inspect relevant state → dependency-aware proposed tasks → developer review → Task Contract for the next approved task. Use `plan`; it does not implement code.
+
+## Project synchronization
+
+Manual, external, or out-of-run change → re-read repository and canonical evidence → affected planned work and bounded proposal → developer approval before any reconciliation write. Use `sync`; it does not overwrite developer work automatically.

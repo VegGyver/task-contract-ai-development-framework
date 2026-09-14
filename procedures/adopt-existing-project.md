@@ -7,6 +7,11 @@
    tcaf adopt --target <project-path>
    ```
 
+   Existing notes, specifications, roadmaps, architecture documents, and other
+   project material do not need manual conversion to TCAF format. The adoption
+   workflow treats them as preserved source evidence and proposes separate
+   canonical project state only where it is needed.
+
 3. The runner resolves the adoption agent, exact manifest and adapter automatically.
 4. Follow the transport declared in the envelope. For Cline `manual-envelope`, start with one `INSPECT` task.
 5. The agent inspects only the bound target and returns the canonical inspect-only report.

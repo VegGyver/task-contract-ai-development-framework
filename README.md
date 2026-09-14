@@ -1,8 +1,48 @@
 # Task-Contract AI Development Framework
 
-A lightweight, model-agnostic framework for bounded, reviewable and incremental AI-assisted software development.
+A lightweight, model-agnostic framework for bounded, reviewable, incremental AI-assisted software development.
 
-Version: **v0.3.3 architecture-A draft**
+Version: **v0.4.0 architecture-A draft**
+
+## What TCAF does
+
+TCAF helps a developer delegate useful software work to an AI without making
+the repository, the requested scope, or the review process depend on chat
+memory. It records project understanding in repository evidence and, where
+needed, in canonical project state: TCAF's stable, normalized working
+representation of the project.
+
+This is different from an unconstrained agent workflow, where a broad prompt
+can quietly turn into a broad change. TCAF uses bounded execution: before a
+piece of work is implemented, a Task Contract makes its goal, expected outcome,
+allowed change surface, checks, exclusions, and stop conditions visible for
+developer review. If the work needs to exceed that boundary, the AI stops for a
+visible amendment or new decision rather than expanding scope silently.
+
+The developer remains responsible for decisions, approval, review, verification,
+and acceptance. The AI can inspect relevant evidence, prepare plans and Task
+Contracts, implement an approved bounded change, and report what happened.
+Preservation-first means existing verified behavior and developer changes are
+kept unless an approved request requires a change. TCAF works with different
+models and adapters; its project state is not a claim about what a chat happens
+to remember.
+
+## Choose an operation
+
+| If you need to… | Use | What happens |
+| --- | --- | --- |
+| Start a new project, or begin from ordinary notes, specs, or a roadmap | `bootstrap` | Establish the minimum project state and first work source. |
+| Bring an implemented project under TCAF without rewriting its code or history | `adopt` | Inspect the project and propose the minimum canonical state. |
+| Turn a feature or outcome into reviewable, dependency-aware work | `plan` | Produce a proposed implementation plan; no code is implemented. |
+| Prepare one specific piece of work | `task` | Generate one bounded Task Contract for review and approval. |
+| Reconcile project state after manual, external, or out-of-run changes | `sync` | Re-read evidence and propose bounded updates without overwriting developer work. |
+
+Your existing project material does not need to be manually rewritten into a
+TCAF format first. Notes, specifications, architecture documents, plans, and
+roadmaps are source evidence. Bootstrap and adopt preserve that material and,
+when needed, derive separate canonical project state for developer review.
+Canonical documents are a working representation for TCAF,
+not a mandatory input format.
 
 ## Core formula
 
@@ -31,8 +71,9 @@ The versioned runtime is installed outside target projects. Framework files are 
 ```txt
 tcaf bootstrap --target <target> [--request <text> | --input <path>]
 tcaf adopt --target <target>
-tcaf task --target <target> --request <bounded request>
 tcaf plan --target <target> --request <feature or outcome>
+tcaf task --target <target> --request <bounded request>
+tcaf sync --target <target> [--request <text> | --input <path>]
 tcaf run <future-agent-id> --target <target>
 ```
 
@@ -77,7 +118,9 @@ Release validation checks version coherence, registries, manifests, module paths
 
 - `procedures/start-new-project.md`
 - `procedures/adopt-existing-project.md`
+- `procedures/plan-feature.md`
 - `procedures/run-development-task.md`
+- `procedures/sync-project-state.md`
 
 ## Current status
 

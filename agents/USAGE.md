@@ -7,7 +7,9 @@ Install the framework once and invoke the Universal Runner. Do not reconstruct m
 ```txt
 tcaf bootstrap --target <target> [--request <text> | --input <path>]
 tcaf adopt --target <target>
+tcaf plan --target <target> --request <feature or outcome>
 tcaf task --target <target> --request <bounded request>
+tcaf sync --target <target> [--request <text> | --input <path>]
 tcaf run <future-agent-id> --target <target>
 ```
 
