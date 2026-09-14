@@ -32,7 +32,13 @@ ownership or convergence, but never invent owners or teams.
 
 Only an approved `custom` decomposition mode may refine standard grouping or
 decomposition behavior. Custom rules still cannot waive a non-waivable TCAF
-invariant or the current shared-contract rule.
+invariant or BP-31: a shared contract, schema, interface or API boundary is a
+dedicated task only when it is a coherent independently reviewable and
+meaningfully verifiable outcome or materially unlocks independent workstreams
+that otherwise cannot proceed safely. Do not create a dedicated boundary task
+merely when the required boundary already exists and is reusable, the change
+belongs in another coherent bounded task, separation is incomplete or
+meaningless, or the split merely mirrors ownership or manufactures parallelism.
 
 If a canonical role is absent, use the loaded fallback or available project
 evidence and label that provenance. Never invent canonical state.

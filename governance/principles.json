@@ -1107,23 +1107,30 @@
       "trigger": "Whenever a shared contract, schema, interface or boundary is considered during decomposition.",
       "change": "CHANGE",
       "implementation": {
-        "status": "NOT_IMPLEMENTED",
+        "status": "IMPLEMENTED",
         "surfaces": [
           "guides/team-and-multi-agent.md",
-          "agent-bundles/feature-planner/AGENT.md"
+          "agent-bundles/feature-planner/AGENT.md",
+          "runtime/planning-rules-minimal.md",
+          "templates/project-docs/planning-policy.md",
+          "runtime/tcaf_runtime/validator.py"
         ]
       },
       "verification": {
         "required": "BLACK_BOX",
-        "status": "UNVERIFIED",
-        "evidence": []
+        "status": "BLACK_BOX_VERIFIED",
+        "evidence": [
+          "tests/governance/test_principles_registry.py",
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
+        ]
       },
-      "health": "REVIEW_REQUIRED",
+      "health": "HEALTHY",
       "custom": {
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Current guides/team-and-multi-agent.md still contains the historical stronger rule requiring shared contracts/API boundaries to use a dedicated approved task. Do not modify that guide in 040-GOV-01."
+      "notes": "Semantic-model BLACK_BOX acceptance verified both contextual directions: no automatic shared-boundary task, and a dedicated boundary task when independently reviewable/verifiable or materially workstream-unlocking."
     },
     {
       "id": "BP-32",
@@ -1347,7 +1354,8 @@
         "BP-13",
         "BP-14",
         "BP-15",
-        "BP-29"
+        "BP-29",
+        "BP-31"
       ]
     }
   }

@@ -23,6 +23,35 @@ from tcaf_runtime.validator import validate_framework, validate_target
 
 
 class RuntimeTests(unittest.TestCase):
+    def test_bp31_instruction_surfaces_use_contextual_shared_boundary_rule(self) -> None:
+        surfaces = [
+            FRAMEWORK_ROOT / "guides" / "team-and-multi-agent.md",
+            FRAMEWORK_ROOT / "agent-bundles" / "feature-planner" / "AGENT.md",
+            FRAMEWORK_ROOT / "runtime" / "planning-rules-minimal.md",
+            FRAMEWORK_ROOT / "templates" / "project-docs" / "planning-policy.md",
+        ]
+        required_contextual_text = (
+            "only when",
+            "coherent",
+            "independently reviewable",
+            "materially unlocks independent",
+            "Do not create a dedicated boundary task merely when",
+            "reusable",
+            "another coherent bounded task",
+            "incomplete or meaningless",
+            "mirrors ownership",
+            "manufactures parallelism",
+        )
+        historical_unconditional_rule = (
+            "Shared contracts and API boundaries require a dedicated approved task."
+        )
+        for path in surfaces:
+            with self.subTest(surface=path):
+                text = " ".join(path.read_text(encoding="utf-8").split())
+                for required_text in required_contextual_text:
+                    self.assertIn(required_text, text)
+                self.assertNotIn(historical_unconditional_rule, text)
+
     def _canonical_project(self, target: Path) -> None:
         schema = load_project_schema(FRAMEWORK_ROOT)
         for role in schema["roles"].values():
@@ -146,6 +175,25 @@ class RuntimeTests(unittest.TestCase):
             self._canonical_project(target)
             policy = self._add_planning_policy(target)
             text = policy.read_text(encoding="utf-8").replace("Mode: `standard`", "Mode: `custom`").replace("None.\n\nWhen Mode", "\nWhen Mode")
+            policy.write_text(text, encoding="utf-8")
+            result = validate_target(FRAMEWORK_ROOT, target)
+        self.assertFalse(result["valid"])
+        self.assertIn("planning-policy-custom", {issue["code"] for issue in result["issues"]})
+
+    def test_planning_policy_recognizes_legacy_shared_boundary_boilerplate(self) -> None:
+        current_boilerplate = (
+            "A custom policy may refine planning organization but may not waive TCAF invariants or BP-31's contextual shared-boundary rule: a shared boundary is dedicated only when it is a coherent independently reviewable and meaningfully verifiable outcome or materially unlocks independent workstreams that otherwise cannot proceed safely. Do not create a dedicated boundary task merely when it already exists and is reusable, belongs in another coherent bounded task, would be incomplete or meaningless, or merely mirrors ownership or manufactures parallelism."
+        )
+        legacy_boilerplate = (
+            "A custom policy may refine planning organization but may not waive TCAF invariants or the currently active shared-contract/API-boundary rule."
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            self._canonical_project(target)
+            policy = self._add_planning_policy(target)
+            text = policy.read_text(encoding="utf-8").replace(
+                "Mode: `standard`", "Mode: `custom`"
+            ).replace(current_boilerplate, legacy_boilerplate)
             policy.write_text(text, encoding="utf-8")
             result = validate_target(FRAMEWORK_ROOT, target)
         self.assertFalse(result["valid"])

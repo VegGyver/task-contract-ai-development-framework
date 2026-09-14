@@ -105,15 +105,27 @@ class PrinciplesRegistryTests(unittest.TestCase):
                 self.assertEqual(principle["health"], "HEALTHY")
                 self.assertEqual(principle["applies"], ["ALL"])
 
-    def test_shared_contract_change_is_explicit_and_not_implemented(self) -> None:
+    def test_bp31_is_implemented_and_black_box_verified(self) -> None:
         by_id = {item["id"]: item for item in self.registry["principles"]}
         principle = by_id["BP-31"]
         self.assertEqual(principle["change"], "CHANGE")
         self.assertEqual(
             principle["implementation"]["status"],
-            "NOT_IMPLEMENTED",
+            "IMPLEMENTED",
         )
-        self.assertEqual(principle["verification"]["status"], "UNVERIFIED")
+        self.assertEqual(principle["verification"]["required"], "BLACK_BOX")
+        self.assertEqual(principle["verification"]["status"], "BLACK_BOX_VERIFIED")
+        self.assertEqual(principle["health"], "HEALTHY")
+        self.assertIn(
+            "tests/acceptance/TEST_LOG.md",
+            principle["verification"]["evidence"],
+        )
+
+    def test_bp31_evidence_covers_active_instruction_surfaces(self) -> None:
+        principle = {item["id"]: item for item in self.registry["principles"]}["BP-31"]
+        self.assertIn("runtime/planning-rules-minimal.md", principle["implementation"]["surfaces"])
+        self.assertIn("templates/project-docs/planning-policy.md", principle["implementation"]["surfaces"])
+        self.assertIn("tests/runtime/test_runtime.py", principle["verification"]["evidence"])
 
     def test_organizational_profile_and_planning_policy_are_recorded(self) -> None:
         by_id = {item["id"]: item for item in self.registry["principles"]}
@@ -133,8 +145,8 @@ class PrinciplesRegistryTests(unittest.TestCase):
         self.assertEqual(requirement["default_path"], "docs/method/planning-policy.md")
         self.assertNotIn("BP-38", {item["id"] for item in self.registry["principles"]})
         self.assertEqual(by_id["BP-31"]["change"], "CHANGE")
-        self.assertEqual(by_id["BP-31"]["implementation"]["status"], "NOT_IMPLEMENTED")
-        self.assertTrue({"BP-03", "BP-07", "BP-12", "BP-13", "BP-14", "BP-15", "BP-29"}.issubset(requirement["non_waivable_principles"]))
+        self.assertEqual(by_id["BP-31"]["implementation"]["status"], "IMPLEMENTED")
+        self.assertTrue({"BP-03", "BP-07", "BP-12", "BP-13", "BP-14", "BP-15", "BP-29", "BP-31"}.issubset(requirement["non_waivable_principles"]))
 
     def test_planner_specific_black_box_evidence_does_not_promote_broader_principles(self) -> None:
         by_id = {item["id"]: item for item in self.registry["principles"]}

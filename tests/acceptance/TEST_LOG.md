@@ -29,10 +29,40 @@ Passing observations across the completed runs:
   external prerequisite and used the bound target locator in its pending
   validation command.
 
-Scope limits: these runs do not demonstrate the shared-contract revision,
-feature-level acceptance distinct from task verification, generalized
-convergence behavior, sync/drift reconciliation, or cross-operation principle
-propagation.
+Scope limits: these runs do not demonstrate feature-level acceptance distinct
+from task verification, generalized convergence behavior, sync/drift
+reconciliation, or cross-operation principle propagation.
+
+## TCAF 0.4 — BP-31 contextual shared-contract decomposition
+
+These were semantic-model BLACK_BOX planner runs using the `team` profile and
+`standard` mode. Final passing runs used the planner bundle and project evidence
+without external corrective prompts.
+
+### A — no dedicated boundary task
+
+For a NestJS `GET /release-info` endpoint displayed by Next.js, the response
+shape was already specified and root package metadata remained the source.
+The planner created RE-006 for API behavior and RE-007 for web behavior, with
+no API-contract task. It stated that the boundary was small, already specified
+and coherently belonged with the API producer. API and web work remained
+independently executable, integration verification remained separate, and no
+ownership was invented. Result: **PASS**.
+
+### B — dedicated boundary task justified
+
+For NestJS `POST /stories/:id/publish` and a worker consuming the canonical
+typed `StoryPublished` event, the planner created RE-006 for the event
+contract, RE-007 for the API producer and RE-008 for the worker consumer.
+RE-006 was justified as independently verifiable and as materially unlocking
+the producer and consumer; dependencies were RE-006 → RE-007 and RE-006 →
+RE-008. No ownership was invented, and convergence remained contract/integration
+verification rather than an artificial implementation task. Result: **PASS**.
+
+Together, A and B verify BP-31's contextual directions: no automatic
+shared-boundary task when an existing specified boundary coherently belongs in
+another task, and a dedicated task when the boundary is independently
+reviewable/verifiable or materially unlocks independent workstreams.
 
 ## Calibration test 1
 

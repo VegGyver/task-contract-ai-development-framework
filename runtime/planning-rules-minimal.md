@@ -8,7 +8,7 @@ Apply these rules whenever TCAF creates, evaluates, decomposes or sequences unit
 - Dependencies represent real prerequisites only. Task IDs, backlog order, roadmap order, phase order and preferred execution order do not create dependencies.
 - Reuse existing tasks and capabilities where valid; preserve existing task IDs, task intent and completed history.
 - Execution profiles express preferred implementation order only. They do not grant permission and do not create semantic dependencies.
-- When parallel developers/agents or separate ownership are actually applicable, define ownership before work, preserve separate bounded edit surfaces, require dedicated approved work for shared contracts or API boundaries under the current team rule, and do not treat parallel completion as integration completion.
+- When parallel developers/agents or separate ownership are actually applicable, define ownership before work, preserve separate bounded edit surfaces, and make a shared contract, schema, interface or API boundary a dedicated approved task only when it is itself a coherent, independently reviewable and meaningfully verifiable outcome or materially unlocks independent workstreams that otherwise cannot proceed safely. Do not create a dedicated boundary task merely when it already exists and is reusable, belongs in another coherent bounded task, would be incomplete or meaningless, or merely mirrors ownership or manufactures parallelism. Do not treat parallel completion as integration completion.
 - Integration of independently owned work requires an explicit gate for contract compatibility, conflicts, supported cross-boundary checks and combined review.
 - Keep tests with the behavior they validate; do not create a generic test task automatically.
 - Keep the semantic dependency graph separate from the execution schedule: `DEPENDENCY GRAPH != EXECUTION SCHEDULE`.
@@ -17,4 +17,4 @@ Apply these rules whenever TCAF creates, evaluates, decomposes or sequences unit
 - `unspecified` remains team-capable: do not invent owners, but do not serialize independent work merely because organization is unknown.
 - `single-developer` may make the recommended execution schedule sequential but does not change task boundaries, dependencies or readiness.
 - `team` and `multi-team` may expose independent parallel-ready work and evidence-backed ownership or convergence; never invent owners or teams.
-- If an approved planning policy is present, obey its decomposition mode. `custom` may refine grouping, ownership conventions and examples only; it cannot waive TCAF invariants or current shared-boundary rules.
+- If an approved planning policy is present, obey its decomposition mode. `custom` may refine grouping, ownership conventions and examples only; it cannot waive a non-waivable TCAF invariant or the contextual BP-31 shared-boundary rule.

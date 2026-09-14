@@ -3,7 +3,14 @@
 Use only for parallel developers/agents or separate frontend/backend ownership.
 
 - Define ownership before work starts.
-- Shared contracts and API boundaries require a dedicated approved task.
+- A shared contract, schema, interface or API boundary becomes a dedicated
+  approved task only when it is itself a coherent, independently reviewable
+  and meaningfully verifiable outcome, or when establishing it materially
+  unlocks independent implementation workstreams that otherwise cannot
+  proceed safely. Do not create a dedicated boundary task merely when the
+  required boundary already exists and is reusable, the change belongs in
+  another coherent bounded task, separation is incomplete or meaningless, or
+  the split merely mirrors ownership or manufactures parallelism.
 - Frontend work must not modify backend-owned files; backend work must not modify frontend-owned files unless explicitly authorized.
 - Each agent receives its own task contract and edit surface.
 - Parallel completion does not equal integration completion.
