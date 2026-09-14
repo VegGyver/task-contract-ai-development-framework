@@ -10,6 +10,7 @@ from typing import Any
 from .adapter import select_adapter
 from .errors import TcafError
 from .formatters import format_json, format_run_markdown
+from .guidance import OPERATION_GUIDANCE
 from .loader import assemble_run
 from .registry import load_agents_registry, read_version
 from .validator import validate_framework, validate_target
@@ -40,12 +41,21 @@ def _add_run_arguments(parser: argparse.ArgumentParser) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="tcaf", description="Task-Contract AI Development Framework runner"
+        prog="tcaf",
+        description=(
+            "Task-Contract AI Development Framework runner. Choose the workflow "
+            "operation that matches the project state and work you want to prepare."
+        ),
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for operation in ("bootstrap", "adopt", "task", "plan", "sync"):
-        operation_parser = subparsers.add_parser(operation)
+    for operation in ("bootstrap", "adopt", "plan", "task", "sync"):
+        guidance = OPERATION_GUIDANCE[operation]
+        operation_parser = subparsers.add_parser(
+            operation,
+            help=guidance["summary"],
+            description=guidance["description"],
+        )
         _add_run_arguments(operation_parser)
 
     run_parser = subparsers.add_parser("run")

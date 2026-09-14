@@ -27,10 +27,16 @@ def format_run_markdown(envelope: dict[str, Any]) -> str:
         ),
         f"- Target: `{target['locator']}`",
         f"- Target kind: `{target['kind']}`",
-        "",
-        "## Bound input",
-        "",
     ]
+    guidance = envelope.get("guidance")
+    if guidance:
+        lines.extend(
+            [
+                f"- Phase: {guidance['phase']}",
+                f"- Next action: {guidance['next_action']}",
+            ]
+        )
+    lines.extend(["", "## Bound input", ""])
     request = envelope["input"].get("request")
     resource = envelope["input"].get("resource")
     lines.append(request if request else "Inline request: not provided.")

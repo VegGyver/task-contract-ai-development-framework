@@ -5,6 +5,7 @@ from typing import Any
 
 from .adapter import select_adapter
 from .errors import TcafError
+from .guidance import operation_guidance
 from .registry import (
     load_agents_registry,
     load_applicability_registry,
@@ -131,7 +132,7 @@ def assemble_run(
 
     modules.append(_module(adapter_path, "framework", f"adapter:{adapter_id}"))
 
-    return {
+    envelope = {
         "run_protocol_version": registry.get("run_protocol_version"),
         "framework_version": read_version(framework_root),
         "operation": operation,
@@ -159,3 +160,10 @@ def assemble_run(
             "output schema, and stop at the developer review gate."
         ),
     }
+    guidance = operation_guidance(operation)
+    if guidance:
+        envelope["guidance"] = {
+            "phase": guidance["phase"],
+            "next_action": guidance["next_action"],
+        }
+    return envelope

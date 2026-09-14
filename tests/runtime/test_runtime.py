@@ -16,6 +16,7 @@ sys.path.insert(0, str(FRAMEWORK_ROOT / "runtime"))
 
 from tcaf_runtime.adapter import select_adapter
 from tcaf_runtime.errors import TcafError
+from tcaf_runtime.formatters import format_json, format_run_markdown
 from tcaf_runtime.loader import assemble_run
 from tcaf_runtime.registry import load_project_schema
 from tcaf_runtime.target import resolve_target_role
@@ -1442,6 +1443,97 @@ class RuntimeTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(payload["agent_id"], "task-contract-generator")
         self.assertEqual(payload["target"]["kind"], "directory")
+
+    def test_cli_workflow_help_distinguishes_public_operations(self) -> None:
+        command = [sys.executable, str(FRAMEWORK_ROOT / "runtime" / "tcaf.py")]
+        top_level = subprocess.run(
+            [*command, "--help"], cwd=FRAMEWORK_ROOT, text=True,
+            capture_output=True, check=False,
+        )
+        self.assertEqual(top_level.returncode, 0, top_level.stderr)
+        for operation, expected in {
+            "bootstrap": "new project",
+            "adopt": "existing implemented project",
+            "plan": "dependency-aware task plan",
+            "task": "bounded Task Contract",
+            "sync": "detect drift",
+        }.items():
+            self.assertIn(operation, top_level.stdout)
+            self.assertIn(expected, top_level.stdout)
+
+        operation_guidance = {
+            "bootstrap": ("new project", "normalize", "optional starting evidence"),
+            "adopt": (
+                "existing implemented repository or project",
+                "preserving existing code and history",
+            ),
+            "plan": ("dependency-aware task plan", "Requires --request or --input"),
+            "task": ("bounded Task Contract", "specific requested unit of work", "Requires --request or --input"),
+            "sync": ("detect drift", "reconciliation", "optional new evidence"),
+        }
+        for operation, expected_phrases in operation_guidance.items():
+            with self.subTest(operation=operation):
+                result = subprocess.run(
+                    [*command, operation, "--help"], cwd=FRAMEWORK_ROOT, text=True,
+                    capture_output=True, check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("usage:", result.stdout)
+                rendered_help = " ".join(result.stdout.replace("-\n", "-").split())
+                for phrase in expected_phrases:
+                    self.assertIn(phrase, rendered_help)
+
+    def test_workflow_envelopes_expose_equivalent_guidance_outside_modules(self) -> None:
+        expected = {
+            "bootstrap": ("project-bootstrap", "Bootstrap normalization"),
+            "adopt": ("existing-project-adoption", "Existing-project adoption"),
+            "plan": ("feature-planner", "Feature planning"),
+            "task": ("task-contract-generator", "Task-contract generation"),
+            "sync": ("project-sync", "Project synchronization"),
+        }
+        for operation, (agent_id, phase) in expected.items():
+            with self.subTest(operation=operation), tempfile.TemporaryDirectory() as temporary:
+                target = Path(temporary) / "target"
+                target.mkdir()
+                if operation == "adopt":
+                    (target / "existing.txt").write_text("existing project\n", encoding="utf-8")
+                kwargs = {
+                    "request": "Prepare the requested work." if operation in {"plan", "task"} else None,
+                    "raw_input": None,
+                }
+                envelope = assemble_run(
+                    FRAMEWORK_ROOT, operation, direct_agent=False, raw_target=str(target),
+                    selectors=[], requested_adapter="generic-cli", **kwargs,
+                )
+                guidance = envelope["guidance"]
+                self.assertEqual(envelope["agent_id"], agent_id)
+                self.assertEqual(guidance["phase"], phase)
+                self.assertTrue(guidance["next_action"])
+                self.assertEqual(json.loads(format_json(envelope))["guidance"], guidance)
+                self.assertIn(guidance["phase"], format_run_markdown(envelope))
+                self.assertIn(guidance["next_action"], format_run_markdown(envelope))
+                self.assertNotIn("guidance", {module["role"] for module in envelope["instruction_modules"]})
+                self.assertNotIn(
+                    guidance["next_action"],
+                    "\n".join(module["content"] for module in envelope["instruction_modules"]),
+                )
+
+    def test_cli_preserves_workflow_input_requirements(self) -> None:
+        command = [sys.executable, str(FRAMEWORK_ROOT / "runtime" / "tcaf.py")]
+        with tempfile.TemporaryDirectory() as temporary:
+            for operation in ("bootstrap", "adopt", "sync"):
+                result = subprocess.run(
+                    [*command, operation, "--target", temporary, "--adapter", "generic-cli", "--format", "json"],
+                    cwd=FRAMEWORK_ROOT, text=True, capture_output=True, check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+            for operation in ("plan", "task"):
+                result = subprocess.run(
+                    [*command, operation, "--target", temporary, "--adapter", "generic-cli", "--format", "json"],
+                    cwd=FRAMEWORK_ROOT, text=True, capture_output=True, check=False,
+                )
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("requires --request or --input", result.stderr)
 
     def test_plan_is_registered_and_assembles_a_review_only_envelope(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
