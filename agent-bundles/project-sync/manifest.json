@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "agent_id": "project-sync",
+  "operation": "sync",
+  "agent_instructions": "AGENT.md",
+  "entrypoint": "START.md",
+  "output_schema": "OUTPUT-SCHEMA.md",
+  "required_modules": ["../../core/validation-evidence.md", "../../core/project-documentation-schema.md", "../../core/task-lifecycle.md", "../../guides/change-management-and-history.md"],
+  "target": {"required": true, "must_exist": true, "allowed_kinds": ["directory"]},
+  "target_modules": [
+    {"role": "project_brief", "when": "if-present"}, {"role": "architecture_overview", "when": "if-present"}, {"role": "backlog", "when": "if-present"},
+    {"role": "project_rules", "when": "if-present", "fallback_module": "../../runtime/standalone-rules-compact.md"}, {"role": "ai_workflow", "when": "if-present"},
+    {"role": "capability_baseline", "when": "if-present"}, {"role": "task_naming", "when": "if-present"}, {"role": "planning_policy", "when": "if-present"}, {"role": "project_manifest", "when": "if-present"}
+  ],
+  "optional_modules": {"max_selected": 0, "selectors": {}}
+}

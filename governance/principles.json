@@ -142,6 +142,7 @@
           "core/principles.md",
           "agent-bundles/task-contract-generator/AGENT.md",
           "agent-bundles/feature-planner/AGENT.md",
+          "agent-bundles/project-sync/AGENT.md",
           "runtime/tcaf_runtime/target.py"
         ]
       },
@@ -149,7 +150,8 @@
         "required": "BLACK_BOX",
         "status": "STATIC_VERIFIED",
         "evidence": [
-          "tests/runtime/test_runtime.py"
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
       "health": "REVIEW_REQUIRED",
@@ -157,7 +159,7 @@
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "0.4 distinguishes canonical approved state from observed implementation evidence; full drift reconciliation remains incomplete until sync."
+      "notes": "0.4 distinguishes canonical approved state from observed implementation evidence. Semantic-model BLACK_BOX acceptance for 040-05 project-sync verified read-only drift inspection/proposal and explicitly bounded canonical reconciliation while preserving unresolved evidence; implementation, verification, and health remain partial because the principle applies across all applicable operations."
     },
     {
       "id": "BP-03",
@@ -1245,7 +1247,8 @@
           "agent-bundles/feature-planner/AGENT.md",
           "agent-bundles/task-contract-generator/AGENT.md",
           "runtime/tcaf_runtime/target.py",
-          "agent-bundles/existing-project-adoption/AGENT.md"
+          "agent-bundles/existing-project-adoption/AGENT.md",
+          "agent-bundles/project-sync/AGENT.md"
         ]
       },
       "verification": {
@@ -1261,7 +1264,7 @@
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Semantic-model BLACK_BOX acceptance confirmed that planner canonical/documentation drift is surfaced rather than silently resolved. Full cross-operation drift reconciliation remains incomplete until the sync workflow is implemented."
+      "notes": "Semantic-model BLACK_BOX acceptance confirmed that planner canonical/documentation drift is surfaced rather than silently resolved. 040-05 project-sync acceptance also verified explicit reconciliation of canonical intended state and observed repository evidence, including unresolved planned-task impact outside approved writes. This is scoped sync evidence only; implementation remains PARTIAL and verification/health remain REVIEW_REQUIRED pending broader cross-operation coverage."
     },
     {
       "id": "BP-36",
@@ -1332,7 +1335,7 @@
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Deterministic compact runtime propagation is implemented, but semantic BLACK_BOX verification is still pending."
+      "notes": "Deterministic compact runtime propagation is implemented and includes sync. The 040-05 semantic-model BLACK_BOX exercised sync behavior only, not a cross-operation propagation matrix, so it does not promote BP-37 verification or health."
     }
   ],
   "operational_requirements": {

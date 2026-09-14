@@ -185,3 +185,72 @@ Automated runtime suite: **26/26 passed** on 2026-07-30.
 Framework preflight: **passed with 0 errors and 0 warnings**.
 
 Clean model acceptance remains required for bootstrap, task generation, in-task amendment handling and final outcome reporting.
+
+## TCAF 0.4 — 040-05 project-sync semantic-model BLACK_BOX acceptance
+
+Fixture/baseline: `/tmp/reality-error-sync-drift`, with Reality Error RE-001
+through RE-004 completed and RE-005 proposed/planned. Manual developer evidence
+was the untracked `prisma/schema.prisma` (Prisma PostgreSQL datasource/generator
+only), preserved throughout with SHA-256
+`d6ba2e4d55dc9336acb9fece8e4ba1361aac8bdb4203aa06150c48035f67286a`.
+
+### A — default inspect/propose: PASS
+
+Without `--request` or `--input`, sync independently inspected canonical and
+repository evidence, detected stale canonical documentation and the untracked
+Prisma file, identified RE-005 as affected but did not infer completion or
+authorship. It surfaced the root `prisma/schema.prisma` versus planned
+`packages/database` mismatch as uncertain, preserved completed history, proposed
+bounded documentation reconciliation with no RE-005/backlog update, stopped at
+WAITING FOR APPROVAL, made no mutation, and reported validation NOT RUN with
+the bound-target command. Post-run repository evidence confirmed the proposal
+pass was read-only.
+
+### B — approved bounded apply: initial semantic reporting failure
+
+The Run Envelope approved only `docs/project-brief.md` and
+`docs/architecture-overview.md` to reflect the RE-001–RE-004 foundation, and
+prohibited backlog, RE-005, Prisma, source, and completed-history changes.
+Writes were correctly bounded, but the final report incorrectly stated that no
+affected planned task/conflict remained although RE-005/Prisma uncertainty was
+unresolved. This run is failure evidence, not a passing acceptance run.
+
+Corrective change: the sync instruction surface now keeps approval/write scope
+separate from the current finding state.
+
+### B2 — corrected approved bounded apply: PASS
+
+After restoring the two canonical docs while preserving the same Prisma
+evidence, sync re-derived findings and changed only
+`docs/project-brief.md` and `docs/architecture-overview.md`. It kept RE-005
+proposed and affected, preserved the unresolved Prisma evidence, distinguished
+findings resolved by approved writes from findings unresolved outside approval,
+and made no backlog, task/history, source, Prisma, staging, commit, or push
+change. It ran exactly:
+
+```txt
+tcaf validate --target /tmp/reality-error-sync-drift
+```
+
+Result: **PASS — 0 errors, 0 warnings**.
+
+Mechanical post-run preservation evidence:
+
+```txt
+git status: M docs/architecture-overview.md; M docs/project-brief.md; ?? prisma/
+git diff --name-only: docs/architecture-overview.md; docs/project-brief.md
+docs/backlog.md: no diff
+prisma/schema.prisma SHA-256: d6ba2e4d55dc9336acb9fece8e4ba1361aac8bdb4203aa06150c48035f67286a
+```
+
+Accepted semantic scope: manual repository drift is read-only by default;
+explicit current-envelope approval bounds canonical writes; and unresolved
+findings survive an apply when outside its approved write set. This demonstrates
+the canonical-intent/observed-evidence distinction, planned-task impact without
+false completion, preservation of developer evidence and completed history, and
+bound-target validation.
+
+Scope limits: this sync semantic-model BLACK_BOX does not demonstrate
+generalized BP-02 or BP-35 behavior across every operation, BP-32 convergence,
+BP-37 cross-operation propagation, feature-level acceptance distinct from task
+verification, 040-06 CLI UX, 040-07 release-gate coverage, or 040-08.

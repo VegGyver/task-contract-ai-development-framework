@@ -9,4 +9,4 @@ Use the Universal Run Protocol through a globally installed Codex integration.
 - Use Codex access only for the target files and permissions declared by the task.
 - Preserve the runner's review gate and exact output state.
 
-The integration may expose native commands or a skill, but the public operations remain `bootstrap`, `adopt`, `task`, and `run`.
+The integration may expose native commands or a skill, but the public operations remain `bootstrap`, `adopt`, `task`, `plan`, `sync`, and `run`.

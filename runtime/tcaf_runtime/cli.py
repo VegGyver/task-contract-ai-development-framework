@@ -44,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for operation in ("bootstrap", "adopt", "task", "plan"):
+    for operation in ("bootstrap", "adopt", "task", "plan", "sync"):
         operation_parser = subparsers.add_parser(operation)
         _add_run_arguments(operation_parser)
 
@@ -148,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
     root = _framework_root()
     args = build_parser().parse_args(argv)
     try:
-        if args.command in {"bootstrap", "adopt", "task", "plan", "run"}:
+        if args.command in {"bootstrap", "adopt", "task", "plan", "sync", "run"}:
             return _run_operation(args, root)
         if args.command == "list":
             registry = load_agents_registry(root)

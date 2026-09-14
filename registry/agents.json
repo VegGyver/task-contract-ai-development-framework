@@ -18,6 +18,10 @@
     "plan": {
       "agent": "feature-planner",
       "aliases": ["feature-plan"]
+    },
+    "sync": {
+      "agent": "project-sync",
+      "aliases": []
     }
   },
   "agents": {
@@ -32,6 +36,9 @@
     },
     "feature-planner": {
       "manifest": "agent-bundles/feature-planner/manifest.json"
+    },
+    "project-sync": {
+      "manifest": "agent-bundles/project-sync/manifest.json"
     }
   }
 }

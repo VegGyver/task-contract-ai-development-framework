@@ -472,7 +472,7 @@ class RuntimeTests(unittest.TestCase):
         mutations = (
             ("missing", lambda registry: registry["modules"]["planning-baseline"].update(path="runtime/missing.md"), "applicability-module"),
             ("coverage", lambda registry: (registry["modules"]["cross-operation-baseline"].update(operations=["bootstrap", "adopt"]), registry["modules"]["planning-baseline"].update(operations=[])), "applicability-coverage"),
-            ("unknown", lambda registry: registry["modules"]["cross-operation-baseline"]["operations"].append("sync"), "applicability-operation"),
+            ("unknown", lambda registry: registry["modules"]["cross-operation-baseline"]["operations"].append("unknown-operation"), "applicability-operation"),
             ("governance", lambda registry: registry["modules"]["cross-operation-baseline"].update(path="governance/CHANGE-CONTROL.md"), "applicability-governance-leak"),
         )
         for name, mutate, code in mutations:
@@ -1471,6 +1471,66 @@ class RuntimeTests(unittest.TestCase):
         self.assertIn("WAITING FOR APPROVAL", "\n".join(
             module["content"] for module in payload["instruction_modules"]
         ))
+
+    def test_sync_is_registered_read_only_and_loads_canonical_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / "target"
+            target.mkdir()
+            self._canonical_project(target)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(FRAMEWORK_ROOT / "runtime" / "tcaf.py"),
+                    "sync",
+                    "--target", str(target), "--adapter", "generic-cli", "--format", "json",
+                ],
+                cwd=FRAMEWORK_ROOT, text=True, capture_output=True, check=False,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["operation"], "sync")
+        self.assertEqual(payload["agent_id"], "project-sync")
+        roles = [module["role"] for module in payload["instruction_modules"]]
+        self.assertEqual(
+            [role for role in roles if role.startswith("applicable:")],
+            ["applicable:cross-operation-baseline", "applicable:planning-baseline"],
+        )
+        for role in (
+            "project_brief", "architecture_overview", "backlog", "project_rules",
+            "ai_workflow", "capability_baseline", "task_naming",
+        ):
+            self.assertIn(role, roles)
+        instructions = "\n".join(module["content"] for module in payload["instruction_modules"])
+        for text in (
+            "default pass is inspect/propose only", "explicit developer approval",
+            "Do not rely on chat memory", "overwrite developer work automatically",
+            "Preserve completed historical", "affected planned tasks", "uncertainty or conflict and stop",
+            "description", "original dependencies", "local adaptation",
+            "extension that requires an amendment", "independent request",
+            "reset", "restore", "discard", "delete", "overwrite",
+            "Re-derive findings from current Run Envelope evidence",
+            "outside the approved update set", "Excluding a finding from approval does not resolve it",
+            "Findings resolved by approved updates:",
+            "Still affected/unresolved outside approval (preserved, not changed):",
+        ):
+            self.assertIn(text, instructions)
+
+    def test_sync_accepts_generic_request_and_input(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / "target"
+            target.mkdir()
+            evidence = Path(temporary) / "new-spec.md"
+            evidence.write_text("# New specification\n", encoding="utf-8")
+            request_envelope = assemble_run(
+                FRAMEWORK_ROOT, "sync", direct_agent=False, raw_target=str(target),
+                request="Inspect this change.", raw_input=None, selectors=[], requested_adapter="generic-cli",
+            )
+            input_envelope = assemble_run(
+                FRAMEWORK_ROOT, "sync", direct_agent=False, raw_target=str(target),
+                request=None, raw_input=str(evidence), selectors=[], requested_adapter="generic-cli",
+            )
+        self.assertEqual(request_envelope["input"]["request"], "Inspect this change.")
+        self.assertEqual(input_envelope["input"]["resource"]["content"], "# New specification\n")
 
     def test_feature_planner_classification_definitions_are_explicit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
