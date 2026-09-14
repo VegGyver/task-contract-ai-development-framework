@@ -916,7 +916,7 @@
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Compact team-capable planning semantics now propagate deterministically through the planning runtime baseline; detailed/specialist team guidance remains partial and optional. Semantic BLACK_BOX verification is still required."
+      "notes": "Semantic-model BLACK_BOX acceptance confirms the planner's profile handling, parallel readiness, no-invented-ownership behavior, and review-gate convergence. Detailed/specialist team execution guidance remains partial and optional, so full BP-25 BLACK_BOX verification is still required."
     },
     {
       "id": "BP-26",
@@ -945,18 +945,19 @@
       },
       "verification": {
         "required": "BLACK_BOX",
-        "status": "BEHAVIOR_VERIFIED",
+        "status": "BLACK_BOX_VERIFIED",
         "evidence": [
           "tests/runtime/test_runtime.py",
-          "tests/governance/test_principles_registry.py"
+          "tests/governance/test_principles_registry.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
-      "health": "REVIEW_REQUIRED",
+      "health": "HEALTHY",
       "custom": {
         "allowed": true,
         "policy": "Valid organizational profiles are unspecified, single-developer, team or multi-team. In the absence of an approved profile, planning resolves to the unspecified team-capable default. The principle itself is not waivable."
       },
-      "notes": "Deterministic organizational-profile and planning-policy support is implemented, but semantic BLACK_BOX verification remains pending."
+      "notes": "Semantic-model BLACK_BOX acceptance covered the unspecified, single-developer, team, and multi-team organizational profiles, plus approved custom decomposition mode, without external corrective prompts; deterministic tests remain separate evidence."
     },
     {
       "id": "BP-27",
@@ -979,17 +980,18 @@
       },
       "verification": {
         "required": "BLACK_BOX",
-        "status": "STATIC_VERIFIED",
+        "status": "BLACK_BOX_VERIFIED",
         "evidence": [
-          "tests/runtime/test_runtime.py"
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
-      "health": "REVIEW_REQUIRED",
+      "health": "HEALTHY",
       "custom": {
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Implemented in the feature-planner instruction surface; black-box semantic verification is still required."
+      "notes": "Semantic-model BLACK_BOX acceptance confirmed separate feature/task identities and allocation from the feature namespace; deterministic tests remain separate evidence."
     },
     {
       "id": "BP-28",
@@ -1015,14 +1017,16 @@
         "required": "BLACK_BOX",
         "status": "STATIC_VERIFIED",
         "evidence": [
-          "tests/runtime/test_runtime.py"
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
       "health": "REVIEW_REQUIRED",
       "custom": {
         "allowed": true,
         "policy": "Approved project planning/decomposition policy may refine decomposition heuristics but may not override non-waivable TCAF invariants."
-      }
+      },
+      "notes": "Planner-specific semantic-model BLACK_BOX acceptance passed for architecture-aware task boundaries. Broader PLAN-family implementation and verification remain incomplete."
     },
     {
       "id": "BP-29",
@@ -1046,14 +1050,16 @@
         "required": "BLACK_BOX",
         "status": "STATIC_VERIFIED",
         "evidence": [
-          "tests/runtime/test_runtime.py"
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
       "health": "REVIEW_REQUIRED",
       "custom": {
         "allowed": false,
         "policy": "Not customizable."
-      }
+      },
+      "notes": "Planner-specific semantic-model BLACK_BOX acceptance passed for real prerequisites and schedule-independent dependencies. Broader WORK-family implementation and verification remain incomplete."
     },
     {
       "id": "BP-30",
@@ -1078,14 +1084,16 @@
         "required": "BLACK_BOX",
         "status": "STATIC_VERIFIED",
         "evidence": [
-          "tests/runtime/test_runtime.py"
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
       "health": "REVIEW_REQUIRED",
       "custom": {
         "allowed": false,
         "policy": "Not customizable."
-      }
+      },
+      "notes": "Planner-specific semantic-model BLACK_BOX acceptance passed for semantic DAG preservation and parallel-ready work. Broader WORK-family implementation and verification remain incomplete."
     },
     {
       "id": "BP-31",
@@ -1172,7 +1180,8 @@
         "required": "BLACK_BOX",
         "status": "STATIC_VERIFIED",
         "evidence": [
-          "tests/runtime/test_runtime.py"
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
       "health": "REVIEW_REQUIRED",
@@ -1180,7 +1189,7 @@
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Feature-planner implements feature member, external prerequisite and existing capability classification; generalized platform/cross-cutting capability handling still requires behavioral hardening."
+      "notes": "Semantic-model BLACK_BOX acceptance confirmed feature-member, external-prerequisite, existing-capability, and unrelated-work classification in planner scenarios. Generalized platform/cross-cutting capability handling still requires behavioral hardening."
     },
     {
       "id": "BP-34",
@@ -1236,7 +1245,8 @@
         "required": "BLACK_BOX",
         "status": "STATIC_VERIFIED",
         "evidence": [
-          "tests/runtime/test_runtime.py"
+          "tests/runtime/test_runtime.py",
+          "tests/acceptance/TEST_LOG.md"
         ]
       },
       "health": "REVIEW_REQUIRED",
@@ -1244,7 +1254,7 @@
         "allowed": false,
         "policy": "Not customizable."
       },
-      "notes": "Full drift reconciliation remains incomplete until the sync workflow is implemented."
+      "notes": "Semantic-model BLACK_BOX acceptance confirmed that planner canonical/documentation drift is surfaced rather than silently resolved. Full cross-operation drift reconciliation remains incomplete until the sync workflow is implemented."
     },
     {
       "id": "BP-36",

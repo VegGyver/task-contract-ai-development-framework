@@ -1,5 +1,39 @@
 # Acceptance Test Log
 
+## TCAF 0.4 — Feature planner semantic-model BLACK_BOX acceptance
+
+These were BLACK_BOX runs of the planner's semantic model, distinct from the
+deterministic/static runtime and governance suites. Final passing runs used the
+planner bundle and project evidence without an external corrective prompt.
+
+Original team-profile run failed: it merged independent API and web work,
+removed their parallel readiness, and allocated the feature ID from task
+numbering. After narrow planner hardening, the corrected retest kept the work
+separate, preserved the semantic DAG and parallel readiness, used `RE-F001`,
+invented no ownership, and expressed convergence as a review gate.
+
+Passing observations across the completed runs:
+
+- Clean Verified Story planning kept the feature distinct from tasks, separated
+  bounded domain/persistence, verification, API, and web work, reused existing
+  capabilities, treated RE-005 as an external prerequisite only when required,
+  and surfaced canonical/documentation drift.
+- Unspecified, single-developer, team, and multi-team standard profiles kept
+  the same API/web task boundaries and semantic readiness. The
+  single-developer profile recommended sequential execution without inventing a
+  dependency; team and multi-team profiles invented neither owners nor teams.
+- The approved custom policy kept independently useful HTTP endpoints separate,
+  retained direct tests with the behavior they verify, avoided micro-tasks, and
+  left both endpoint tasks parallel-ready on the existing API foundation.
+- The classification/validation retest stopped emitting unrelated RE-005 as an
+  external prerequisite and used the bound target locator in its pending
+  validation command.
+
+Scope limits: these runs do not demonstrate the shared-contract revision,
+feature-level acceptance distinct from task verification, generalized
+convergence behavior, sync/drift reconciliation, or cross-operation principle
+propagation.
+
 ## Calibration test 1
 
 Result: partial pass.

@@ -113,6 +113,7 @@ class PrinciplesRegistryTests(unittest.TestCase):
             principle["implementation"]["status"],
             "NOT_IMPLEMENTED",
         )
+        self.assertEqual(principle["verification"]["status"], "UNVERIFIED")
 
     def test_organizational_profile_and_planning_policy_are_recorded(self) -> None:
         by_id = {item["id"]: item for item in self.registry["principles"]}
@@ -120,8 +121,12 @@ class PrinciplesRegistryTests(unittest.TestCase):
         self.assertEqual(principle["change"], "NEW")
         self.assertEqual(principle["implementation"]["status"], "IMPLEMENTED")
         self.assertEqual(principle["verification"]["required"], "BLACK_BOX")
-        self.assertEqual(principle["verification"]["status"], "BEHAVIOR_VERIFIED")
-        self.assertEqual(principle["health"], "REVIEW_REQUIRED")
+        self.assertEqual(principle["verification"]["status"], "BLACK_BOX_VERIFIED")
+        self.assertEqual(principle["health"], "HEALTHY")
+        self.assertIn(
+            "tests/acceptance/TEST_LOG.md",
+            principle["verification"]["evidence"],
+        )
         requirement = self.registry["operational_requirements"]["planning_decomposition_policy"]
         self.assertEqual(requirement["status"], "IMPLEMENTED")
         self.assertEqual(requirement["canonical_role"], "planning_policy")
@@ -130,6 +135,19 @@ class PrinciplesRegistryTests(unittest.TestCase):
         self.assertEqual(by_id["BP-31"]["change"], "CHANGE")
         self.assertEqual(by_id["BP-31"]["implementation"]["status"], "NOT_IMPLEMENTED")
         self.assertTrue({"BP-03", "BP-07", "BP-12", "BP-13", "BP-14", "BP-15", "BP-29"}.issubset(requirement["non_waivable_principles"]))
+
+    def test_planner_specific_black_box_evidence_does_not_promote_broader_principles(self) -> None:
+        by_id = {item["id"]: item for item in self.registry["principles"]}
+        for principle_id in ("BP-28", "BP-29", "BP-30"):
+            principle = by_id[principle_id]
+            with self.subTest(principle=principle_id):
+                self.assertEqual(principle["implementation"]["status"], "PARTIAL")
+                self.assertEqual(principle["verification"]["status"], "STATIC_VERIFIED")
+                self.assertEqual(principle["health"], "REVIEW_REQUIRED")
+                self.assertIn(
+                    "tests/acceptance/TEST_LOG.md",
+                    principle["verification"]["evidence"],
+                )
 
     def test_principle_propagation_is_implemented_pending_black_box(self) -> None:
         by_id = {item["id"]: item for item in self.registry["principles"]}
